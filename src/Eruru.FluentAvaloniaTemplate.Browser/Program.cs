@@ -1,0 +1,29 @@
+using Avalonia;
+using Avalonia.Browser;
+using Eruru.FluentAvaloniaTemplate;
+using Eruru.FluentAvaloniaTemplate.Browser;
+
+internal sealed partial class Program {
+
+	private static Task Main (string[] args) {
+		return BuildAvaloniaApp ()
+#if DEBUG
+			.WithDeveloperTools ()
+#endif
+			.StartBrowserAppAsync ("out");
+	}
+
+	public static AppBuilder BuildAvaloniaApp () {
+		return AppBuilder.Configure<App> ()
+			.WithFont_SourceHanSansCN ()
+			.AfterPlatformServicesSetup (static appBuilder => {
+				appBuilder.ConfigureServices (static serviceCollection => {
+					serviceCollection.AddCommonServices ();
+					serviceCollection.AddViews ();
+					serviceCollection.AddViewModels ();
+					serviceCollection.AddJsonConfig (new JsonConfigLocalStorageSource ("Config"));
+				});
+			});
+	}
+
+}

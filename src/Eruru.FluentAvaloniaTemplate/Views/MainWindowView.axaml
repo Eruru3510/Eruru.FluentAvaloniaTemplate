@@ -1,0 +1,20 @@
+<Window
+	x:Class="Eruru.FluentAvaloniaTemplate.Views.MainWindowView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:res="using:Eruru.FluentAvaloniaTemplate.Resources"
+	xmlns:views="using:Eruru.FluentAvaloniaTemplate.Views"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
+	Title="{I18N Key={x:Static res:LangKeys.AppName}}"
+	MinWidth="300"
+	MinHeight="50"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:DataType="vm:MainWindowViewModel"
+	Icon="/Assets/avalonia-logo.ico"
+	WindowStartupLocation="CenterScreen"
+	mc:Ignorable="d">
+	<views:MainView />
+</Window>

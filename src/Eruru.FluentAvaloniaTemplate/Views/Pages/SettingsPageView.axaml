@@ -1,0 +1,398 @@
+<UserControl
+	x:Class="Eruru.FluentAvaloniaTemplate.SettingsPageView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:res="using:Eruru.FluentAvaloniaTemplate.Resources"
+	xmlns:ui="using:FluentAvalonia.UI.Controls"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:DataType="vm:SettingsPageViewModel"
+	mc:Ignorable="d">
+	<ScrollViewer Padding="8">
+		<StackPanel Spacing="8">
+			<StackPanel.Styles>
+				<Style Selector="ComboBox">
+					<Setter Property="MinWidth" Value="130" />
+				</Style>
+			</StackPanel.Styles>
+			<Grid
+				Height="90"
+				Margin="0,0,0,10"
+				ColumnDefinitions="*,Auto"
+				RowDefinitions="*,Auto">
+				<DockPanel>
+					<Image
+						Height="78"
+						DockPanel.Dock="Left"
+						RenderOptions.BitmapInterpolationMode="HighQuality"
+						Source="/Assets/avalonia-logo.ico" />
+					<StackPanel Margin="12,0" Spacing="0">
+						<StackPanel.Styles>
+							<Style Selector="TextBlock">
+								<Setter Property="TextWrapping" Value="NoWrap" />
+							</Style>
+						</StackPanel.Styles>
+						<TextBlock Text="FluentAvalonia" Theme="{StaticResource TitleTextBlockStyle}" />
+						<TextBlock Text="{Binding CurrentFluentAvaloniaVersion}" Theme="{StaticResource BodyTextBlockStyle}" />
+						<TextBlock Text="MIT License" Theme="{StaticResource CaptionTextBlockStyle}" />
+						<TextBlock
+							Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+							Text="http://github.com/amwx/FluentAvalonia"
+							Theme="{StaticResource CaptionTextBlockStyle}" />
+					</StackPanel>
+				</DockPanel>
+				<DockPanel
+					Name="HeaderRightContent"
+					Grid.Column="1"
+					Opacity="1">
+					<DockPanel.RenderTransform>
+						<TranslateTransform X="0" Y="0" />
+					</DockPanel.RenderTransform>
+					<Image
+						Height="48"
+						DockPanel.Dock="Left"
+						RenderOptions.BitmapInterpolationMode="HighQuality"
+						Source="/Assets/avalonia-logo.ico" />
+					<StackPanel Margin="12,0" VerticalAlignment="Center">
+						<TextBlock Text="Avalonia" Theme="{StaticResource SubtitleTextBlockStyle}" />
+						<TextBlock
+							Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+							Text="{Binding CurrentAvaloniaVersion}"
+							Theme="{StaticResource CaptionTextBlockStyle}" />
+						<TextBlock
+							Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+							Text="https://github.com/AvaloniaUI/Avalonia"
+							Theme="{StaticResource CaptionTextBlockStyle}" />
+					</StackPanel>
+				</DockPanel>
+			</Grid>
+			<ui:FASettingsExpander
+				Description="{I18N Key={x:Static res:LangKeys.ChangeCurrentAppLanguage}}"
+				Header="{I18N Key={x:Static res:LangKeys.AppLanguage}}"
+				IconSource="Character">
+				<ui:FASettingsExpander.Footer>
+					<ComboBox
+						DisplayMemberBinding="{Binding Key}"
+						ItemsSource="{Binding AppLanguages}"
+						SelectedValue="{Binding AppLanguage}"
+						SelectedValueBinding="{Binding Value}" />
+				</ui:FASettingsExpander.Footer>
+			</ui:FASettingsExpander>
+			<ui:FASettingsExpander
+				Description="{I18N Key={x:Static res:LangKeys.ChangeCurrentAppFont}}"
+				Header="{I18N Key={x:Static res:LangKeys.AppFont}}"
+				IconSource="Font">
+				<ui:FASettingsExpander.Footer>
+					<ComboBox
+						DisplayMemberBinding="{Binding Key}"
+						ItemsSource="{Binding AppFonts}"
+						SelectedValue="{Binding AppFont}"
+						SelectedValueBinding="{Binding Value}">
+						<ComboBox.Styles>
+							<Style Selector="ComboBox /template/ Popup#PART_Popup">
+								<Setter Property="Width" Value="250" />
+							</Style>
+						</ComboBox.Styles>
+					</ComboBox>
+				</ui:FASettingsExpander.Footer>
+			</ui:FASettingsExpander>
+			<ui:FASettingsExpander
+				Description="{I18N Key={x:Static res:LangKeys.ChangeCurrentAppTheme}}"
+				Header="{I18N Key={x:Static res:LangKeys.AppTheme}}"
+				IconSource="DarkTheme">
+				<ui:FASettingsExpander.Footer>
+					<ComboBox
+						DisplayMemberBinding="{I18N {Binding Key}}"
+						ItemsSource="{Binding AppThemes}"
+						SelectedValue="{Binding AppTheme}"
+						SelectedValueBinding="{Binding Value}" />
+				</ui:FASettingsExpander.Footer>
+			</ui:FASettingsExpander>
+			<ui:FASettingsExpander
+				Description="{I18N Key={x:Static res:LangKeys.ChangeCurrentAppFlowDirection}}"
+				Header="{I18N Key={x:Static res:LangKeys.AppFlowDirection}}"
+				IconSource="AlignRight">
+				<ui:FASettingsExpander.Footer>
+					<ComboBox
+						DisplayMemberBinding="{I18N {Binding Key}}"
+						ItemsSource="{Binding AppFlowDirections}"
+						SelectedValue="{Binding AppFlowDirection}"
+						SelectedValueBinding="{Binding Value}" />
+				</ui:FASettingsExpander.Footer>
+			</ui:FASettingsExpander>
+			<ui:FASettingsExpander
+				Description="{I18N Key={x:Static res:LangKeys.SetAppCustomAccentColorForApp}}"
+				Header="{I18N Key={x:Static res:LangKeys.AppAccentColor}}"
+				IconSource="ColorLine"
+				IsExpanded="{Binding IsAppAccentColorExpanded}">
+				<ui:FASettingsExpanderItem Content="{I18N Key={x:Static res:LangKeys.Preview}}">
+					<ui:FASettingsExpanderItem.Footer>
+						<StackPanel>
+							<Grid
+								Grid.Column="1"
+								Margin="0,0,0,10"
+								HorizontalAlignment="Right"
+								ColumnDefinitions="*,*"
+								RowDefinitions="*,*,*,*">
+								<Border
+									Grid.ColumnSpan="2"
+									Height="40"
+									Background="{DynamicResource SystemAccentColor}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+										Text="{I18N Key={x:Static res:LangKeys.SystemAccentColor}}" />
+								</Border>
+								<Border
+									Grid.Row="1"
+									Grid.Column="0"
+									Width="90"
+									Height="40"
+									Background="{DynamicResource SystemAccentColorLight1}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}">
+										<TextBlock.Text>
+											<I18N Key="{}{0}1">
+												<LanguageBinding Key="{x:Static res:LangKeys.AccentColor_Light}" />
+											</I18N>
+										</TextBlock.Text>
+									</TextBlock>
+								</Border>
+								<Border
+									Grid.Row="2"
+									Grid.Column="0"
+									Width="90"
+									Height="40"
+									Background="{DynamicResource SystemAccentColorLight2}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}">
+										<TextBlock.Text>
+											<I18N Key="{}{0}2">
+												<LanguageBinding Key="{x:Static res:LangKeys.AccentColor_Light}" />
+											</I18N>
+										</TextBlock.Text>
+									</TextBlock>
+								</Border>
+								<Border
+									Grid.Row="3"
+									Grid.Column="0"
+									Width="90"
+									Height="40"
+									Background="{DynamicResource SystemAccentColorLight3}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}">
+										<TextBlock.Text>
+											<I18N Key="{}{0}3">
+												<LanguageBinding Key="{x:Static res:LangKeys.AccentColor_Light}" />
+											</I18N>
+										</TextBlock.Text>
+									</TextBlock>
+								</Border>
+								<Border
+									Grid.Row="1"
+									Grid.Column="1"
+									Width="90"
+									Height="40"
+									Background="{DynamicResource SystemAccentColorDark1}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}">
+										<TextBlock.Text>
+											<I18N Key="{}{0}1">
+												<LanguageBinding Key="{x:Static res:LangKeys.AccentColor_Dark}" />
+											</I18N>
+										</TextBlock.Text>
+									</TextBlock>
+								</Border>
+								<Border
+									Grid.Row="2"
+									Grid.Column="1"
+									Width="90"
+									Height="40"
+									Background="{DynamicResource SystemAccentColorDark2}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}">
+										<TextBlock.Text>
+											<I18N Key="{}{0}2">
+												<LanguageBinding Key="{x:Static res:LangKeys.AccentColor_Dark}" />
+											</I18N>
+										</TextBlock.Text>
+									</TextBlock>
+								</Border>
+								<Border
+									Grid.Row="3"
+									Grid.Column="1"
+									Width="90"
+									Height="40"
+									Background="{DynamicResource SystemAccentColorDark3}">
+									<TextBlock
+										HorizontalAlignment="Center"
+										VerticalAlignment="Center"
+										Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}">
+										<TextBlock.Text>
+											<I18N Key="{}{0}3">
+												<LanguageBinding Key="{x:Static res:LangKeys.AccentColor_Dark}" />
+											</I18N>
+										</TextBlock.Text>
+									</TextBlock>
+								</Border>
+							</Grid>
+							<CheckBox
+								HorizontalAlignment="Right"
+								Content="{I18N Key={x:Static res:LangKeys.UseCustomAccentColor}}"
+								IsChecked="{Binding IsUseCustomAccentColor}"
+								IsThreeState="False" />
+						</StackPanel>
+					</ui:FASettingsExpanderItem.Footer>
+				</ui:FASettingsExpanderItem>
+				<ui:FASettingsExpanderItem>
+					<ui:FASettingsExpanderItem.Footer>
+						<StackPanel IsVisible="{Binding IsUseCustomAccentColor}">
+							<TextBlock Margin="24,0,0,0" Text="{I18N Key={x:Static res:LangKeys.PresetColors}}" />
+							<ListBox
+								MaxWidth="390"
+								Margin="24,0,24,12"
+								HorizontalAlignment="Left"
+								AutoScrollToSelectedItem="False"
+								ItemsSource="{Binding PredefinedAccentColors}"
+								SelectedItem="{Binding PredefinedAccentColor}">
+								<ListBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<WrapPanel />
+									</ItemsPanelTemplate>
+								</ListBox.ItemsPanel>
+								<ListBox.Styles>
+									<Style Selector="ListBoxItem">
+										<Setter Property="Width" Value="48" />
+										<Setter Property="Height" Value="48" />
+										<Setter Property="MinWidth" Value="0" />
+										<Setter Property="Margin" Value="1 1 0 0" />
+										<Setter Property="Template">
+											<ControlTemplate>
+												<Panel>
+													<Border
+														Name="Root"
+														BorderThickness="2"
+														CornerRadius="{StaticResource ControlCornerRadius}">
+														<Border.Background>
+															<SolidColorBrush Color="{Binding}" />
+														</Border.Background>
+													</Border>
+													<Border
+														Name="Check"
+														Width="20"
+														Height="20"
+														Margin="0,2,2,0"
+														HorizontalAlignment="Right"
+														VerticalAlignment="Top"
+														Background="{DynamicResource FocusStrokeColorOuter}">
+														<ui:FASymbolIcon
+															FontSize="18"
+															Foreground="{DynamicResource SystemAccentColor}"
+															Symbol="Checkmark" />
+													</Border>
+												</Panel>
+											</ControlTemplate>
+										</Setter>
+									</Style>
+									<Style Selector="ListBoxItem /template/ Border#Check">
+										<Setter Property="IsVisible" Value="False" />
+									</Style>
+									<Style Selector="ListBoxItem:pointerover /template/ Border#Root">
+										<Setter Property="BorderBrush" Value="{DynamicResource FocusStrokeColorOuter}" />
+									</Style>
+									<Style Selector="ListBoxItem:selected /template/ Border#Root">
+										<Setter Property="BorderBrush" Value="{DynamicResource FocusStrokeColorOuter}" />
+									</Style>
+									<Style Selector="ListBoxItem:selected /template/ Border#Check">
+										<Setter Property="IsVisible" Value="True" />
+									</Style>
+								</ListBox.Styles>
+							</ListBox>
+							<Rectangle Height="1" Fill="{DynamicResource ApplicationPageBackgroundThemeBrush}" />
+							<DockPanel Margin="24,6,0,0" LastChildFill="False">
+								<TextBlock
+									VerticalAlignment="Center"
+									DockPanel.Dock="Left"
+									Text="{I18N Key={x:Static res:LangKeys.CustomColor}}" />
+								<ColorPicker DockPanel.Dock="Right" Color="{Binding CustomAccentColor}" />
+							</DockPanel>
+						</StackPanel>
+					</ui:FASettingsExpanderItem.Footer>
+				</ui:FASettingsExpanderItem>
+			</ui:FASettingsExpander>
+			<ui:FASettingsExpander Header="{I18N Key={x:Static res:LangKeys.MinimizeToTrayIcon}}">
+				<ui:FASettingsExpander.IsVisible>
+					<OnPlatform Default="False">
+						<On Content="True" Options="Windows, Linux, macOS" />
+					</OnPlatform>
+				</ui:FASettingsExpander.IsVisible>
+				<ui:FASettingsExpander.Footer>
+					<ToggleSwitch
+						IsChecked="{Binding IsMinimizeToTrayIcon}"
+						IsThreeState="False"
+						OffContent=""
+						OnContent="" />
+				</ui:FASettingsExpander.Footer>
+			</ui:FASettingsExpander>
+			<ui:FASettingsExpander Header="About" IconSource="{StaticResource InfoIcon}">
+				<ui:FASettingsExpanderItem
+					ActionIconSource="Open"
+					Command="{Binding OpenUrlCommand}"
+					CommandParameter="https://github.com/amwx/FluentAvalonia"
+					Content="Found a bug? Want a new feature, control, or sample?"
+					IsClickEnabled="True" />
+				<ui:FASettingsExpanderItem Content="Clone FluentAvalonia repository">
+					<ui:FASettingsExpanderItem.Footer>
+						<SelectableTextBlock Text="git clone https://github.com/amwx/FluentAvalonia" />
+					</ui:FASettingsExpanderItem.Footer>
+				</ui:FASettingsExpanderItem>
+				<ui:FASettingsExpanderItem>
+					<StackPanel Spacing="4">
+						<TextBlock Text="Dependencies" />
+						<TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">
+							<Run>All resources, brushes, and control naming come from the WinUI repository (https://github.com/microsoft/microsoft-ui-xaml) which is licensed under the MIT license.</Run>
+							<LineBreak />
+							<LineBreak />
+							<Run>Avalonia is licensed under the MIT license</Run>
+							<LineBreak />
+							<LineBreak />
+							<Run>Both Avalonia and WinUI are not affiliated with and do not endorse FluentAvalonia.</Run>
+							<LineBreak />
+							<LineBreak />
+							<Run>Main page header image created using https://www.freepik.com/free-vector/paper-style-white-monochrome-background_15628815.htm</Run>
+						</TextBlock>
+					</StackPanel>
+				</ui:FASettingsExpanderItem>
+				<ui:FASettingsExpanderItem>
+					<StackPanel Spacing="4">
+						<TextBlock Text="License" />
+						<TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">
+							<Run>FluentAvalonia is licensed under the MIT license.</Run>
+							<LineBreak />
+							<Run>FAControlsGallery © amwx 2023</Run>
+							<LineBreak />
+							<LineBreak />
+							<Run>THIS CODE AND INFORMATION IS PROVIDED ‘AS IS’ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.</Run>
+							<LineBreak />
+							<Run>For full MIT license, please see the license.md file</Run>
+						</TextBlock>
+					</StackPanel>
+				</ui:FASettingsExpanderItem>
+			</ui:FASettingsExpander>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

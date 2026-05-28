@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WebAssembly">
+	<PropertyGroup>
+		<TargetFramework>net10.0-browser</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia.Browser" />
+		<PackageReference Include="Quick.AvaloniaFonts.SourceHanSansCN.Slim" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Eruru.FluentAvaloniaTemplate\Eruru.FluentAvaloniaTemplate.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,68 @@
+<UserControl
+	x:Class="Eruru.FluentAvaloniaTemplate.Views.MainView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:res="using:Eruru.FluentAvaloniaTemplate.Resources"
+	xmlns:ui="using:FluentAvalonia.UI.Controls"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:DataType="vm:MainViewModel"
+	mc:Ignorable="d">
+	<Grid
+		Margin="0,5,0,5"
+		Background="{DynamicResource NormalBlackUpDark}"
+		RowDefinitions="Auto,*">
+		<Grid
+			Height="30"
+			Background="{DynamicResource NormalBlackUpDark}"
+			ColumnDefinitions="Auto,Auto,*,Auto"
+			IsVisible="{OnPlatform False,
+			                       Windows=True}">
+			<Image
+				Width="18"
+				Height="18"
+				Margin="12,4"
+				DockPanel.Dock="Left"
+				IsHitTestVisible="False"
+				RenderOptions.BitmapInterpolationMode="HighQuality"
+				Source="/Assets/avalonia-logo.ico" />
+			<TextBlock
+				Grid.Column="1"
+				VerticalAlignment="Center"
+				FontSize="12"
+				IsHitTestVisible="False"
+				Text="{Binding $parent[Window].Title}" />
+		</Grid>
+		<ui:FANavigationView
+			Name="NavigationView"
+			Grid.Row="1"
+			BackRequested="NavigationView_BackRequested"
+			DisplayModeChanged="NavigationView_DisplayModeChanged"
+			FooterMenuItemsSource="{Binding NavigationView.FooterItems}"
+			IsBackButtonVisible="True"
+			IsBackEnabled="{Binding #Frame.CanGoBack}"
+			IsSettingsVisible="False"
+			MenuItemsSource="{Binding NavigationView.Items}"
+			SelectedItem="{Binding Page}"
+			SelectionChanged="NavigationView_SelectionChanged">
+			<ui:FANavigationView.Resources>
+				<DataTemplate x:Key="NavigationViewItemTemplate" x:DataType="vm:NavigationItemViewModel">
+					<ui:FANavigationViewItem
+						Content="{I18N {Binding Content}}"
+						ContentTemplate="{StaticResource NavigationViewItemTemplate}"
+						IconSource="{Binding IconSource}"
+						IsSelected="{Binding IsSelected}"
+						MenuItemsSource="{Binding Items}"
+						Tag="{Binding DataContext}" />
+				</DataTemplate>
+			</ui:FANavigationView.Resources>
+			<ui:FANavigationView.MenuItemTemplate>
+				<StaticResource ResourceKey="NavigationViewItemTemplate" />
+			</ui:FANavigationView.MenuItemTemplate>
+			<ui:FAFrame Name="Frame" Navigated="Frame_Navigated" />
+		</ui:FANavigationView>
+	</Grid>
+</UserControl>

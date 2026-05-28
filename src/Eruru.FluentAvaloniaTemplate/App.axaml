@@ -1,0 +1,43 @@
+<Application
+	x:Class="Eruru.FluentAvaloniaTemplate.App"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:res="using:Eruru.FluentAvaloniaTemplate.Resources"
+	xmlns:sty="using:FluentAvalonia.Styling"
+	xmlns:ui="using:FluentAvalonia.UI.Controls"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
+	xmlns:wnd="using:FluentAvalonia.UI.Windowing"
+	x:DataType="vm:AppViewModel"
+	RequestedThemeVariant="Dark">
+	<!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+	<Application.Styles>
+		<sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+		<Style Selector="wnd|FAAppSplashScreen">
+			<Setter Property="Background" Value="{DynamicResource ApplicationPageBackgroundThemeBrush}" />
+			<Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+		</Style>
+		<Style Selector="ui|FASettingsExpander /template/ Expander#Expander">
+			<Setter Property="ui:FAExpanderExt.ExpanderAnimationType" Value="{OnPlatform FluentV2, Browser=None}" />
+		</Style>
+	</Application.Styles>
+	<Application.Resources>
+		<ui:FAPathIconSource x:Key="InfoIcon" Data="M2 14C2 20.6274 7.37258 26 14 26C20.6274 26 26 20.6274 26 14C26 7.37258 20.6274 2 14 2C7.37258 2 2 7.37258 2 14ZM15.25 8C15.25 8.69036 14.6904 9.25 14 9.25C13.3096 9.25 12.75 8.69036 12.75 8C12.75 7.30964 13.3096 6.75 14 6.75C14.6904 6.75 15.25 7.30964 15.25 8ZM14 11C14.5523 11 15 11.4477 15 12L15 20C15 20.5523 14.5523 21 14 21C13.4477 21 13 20.5523 13 20L13 12C13 11.4477 13.4477 11 14 11Z" />
+	</Application.Resources>
+	<TrayIcon.Icons>
+		<TrayIcons>
+			<TrayIcon
+				Clicked="TrayIcon_Clicked"
+				Icon="/Assets/avalonia-logo.ico"
+				IsVisible="{Binding IsShowTrayIcon}"
+				ToolTipText="{I18N Key={x:Static res:LangKeys.AppName}}">
+				<TrayIcon.Menu>
+					<NativeMenu>
+						<NativeMenuItem Click="NativeMenuItemShow_Click" Header="{I18N Key={x:Static res:LangKeys.Show}}" />
+						<NativeMenuItem Click="NativeMenuItemQuit_Click" Header="{I18N Key={x:Static res:LangKeys.Quit}}" />
+					</NativeMenu>
+				</TrayIcon.Menu>
+			</TrayIcon>
+		</TrayIcons>
+	</TrayIcon.Icons>
+</Application>

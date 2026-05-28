@@ -14,7 +14,6 @@
 	<ItemGroup>
 		<PackageReference Include="Avalonia" />
 		<PackageReference Include="CommunityToolkit.Mvvm" />
-		<PackageReference Include="Eruru.Debouncer" />
 		<PackageReference Include="Eruru.JsonConfig" />
 		<PackageReference Include="FluentAvaloniaUI" />
 		<PackageReference Include="Antelcat.I18N.Avalonia" />

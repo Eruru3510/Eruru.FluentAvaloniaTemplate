@@ -50,6 +50,9 @@ namespace Eruru.FluentAvaloniaTemplate {
 			var fileInfo = new FileInfo (PathService.ConfigPath);
 			fileInfo.Directory?.Create ();
 			var jsonSerializerOptions = new JsonSerializerOptions (JsonConfig.JsonConfig.JsonSerializerOptions);
+			if (OperatingSystem.IsBrowser ()) {
+				jsonSerializerOptions.WriteIndented = false;
+			}
 			jsonSerializerOptions.Converters.Add (new ColorJsonConverter ());
 			var jsonConfigContext = new JsonConfigContext (jsonSerializerOptions);
 #pragma warning disable CA2000 // 丢失范围之前释放对象

@@ -8,6 +8,7 @@ namespace Eruru.FluentAvaloniaTemplate.Browser {
 		public event EventHandler? OnChanged;
 
 		readonly string Name = name;
+		readonly MemoryStream MemoryStream = new ();
 		int State;
 
 		public void Dispose () {
@@ -24,7 +25,11 @@ namespace Eruru.FluentAvaloniaTemplate.Browser {
 			if (string.IsNullOrWhiteSpace (value)) {
 				return Task.FromResult<Stream?> (null);
 			}
-			return Task.FromResult<Stream?> (new MemoryStream (Encoding.UTF8.GetBytes (value)));
+			MemoryStream.Position = 0;
+			MemoryStream.SetLength (0);
+			MemoryStream.Write (Encoding.UTF8.GetBytes (value));
+			MemoryStream.Position = 0;
+			return Task.FromResult<Stream?> (MemoryStream);
 		}
 
 		public Task CloseInputStreamAsync (Stream? stream) {
@@ -32,14 +37,14 @@ namespace Eruru.FluentAvaloniaTemplate.Browser {
 		}
 
 		public Task<Stream?> OpenOutputStreamAsync () {
-			return Task.FromResult<Stream?> (new MemoryStream ());
+			MemoryStream.Position = 0;
+			MemoryStream.SetLength (0);
+			return Task.FromResult<Stream?> (MemoryStream);
 		}
 
 		public Task CloseOutputStreamAsync (Stream? stream) {
-			if (stream is not MemoryStream memoryStream) {
-				return Task.CompletedTask;
-			}
-			JsInterop.LocalStorageSetItem (Name, Encoding.UTF8.GetString (memoryStream.ToArray ()));
+			MemoryStream.Position = 0;
+			JsInterop.LocalStorageSetItem (Name, Encoding.UTF8.GetString (MemoryStream.ToArray ()));
 			return Task.CompletedTask;
 		}
 

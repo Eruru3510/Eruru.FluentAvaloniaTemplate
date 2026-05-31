@@ -30,7 +30,7 @@ namespace Eruru.FluentAvaloniaTemplate.JsonConverters {
 			}
 		Exception:
 			throw new JsonException (
-				$"The expectation was a JSON object, {{\"r\":0,\"g\":0,\"b\":0,\"a\":0}}. {nameof (reader.TokenStartIndex)}: {index}"
+				$"The expected value is a JSON object. {{\"r\":0,\"g\":0,\"b\":0,\"a\":0}}. {nameof (reader.TokenStartIndex)}: {index}"
 			);
 		}
 

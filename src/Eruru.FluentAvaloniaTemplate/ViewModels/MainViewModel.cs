@@ -10,21 +10,20 @@ namespace Eruru.FluentAvaloniaTemplate.ViewModels {
 		[ObservableProperty]
 		public partial NavigationItemViewModel? Page { get; set; }
 		[ObservableProperty]
-		public partial NavigationViewModel? NavigationView { get; set; } = null;
+		public partial NavigationViewModel? NavigationView { get; set; } = new () {
+			Items = [new (
+				LangKeys.HomePage, typeof (HomePageView),
+				static state => (state as ServiceProvider)?.GetRequiredService<HomePageViewModel> (),
+				App.ServiceProvider, new FASymbolIconSource () { Symbol = FASymbol.Home }
+			)],
+			FooterItems = [new (
+				LangKeys.Settings, typeof (SettingsPageView),
+				static state => (state as ServiceProvider)?.GetRequiredService<SettingsPageViewModel> (),
+				App.ServiceProvider, new FASymbolIconSource () { Symbol = FASymbol.Settings }
+			)]
+		};
 
 		public MainViewModel () {
-			NavigationView = new () {
-				Items = [new (
-					LangKeys.HomePage, typeof (HomePageView),
-					static state => (state as ServiceProvider)?.GetRequiredService<HomePageViewModel> (),
-					App.ServiceProvider, new FASymbolIconSource () { Symbol = FASymbol.Home }
-				)],
-				FooterItems = [new (
-					LangKeys.Settings, typeof (SettingsPageView),
-					static state => (state as ServiceProvider)?.GetRequiredService<SettingsPageViewModel> (),
-					App.ServiceProvider, new FASymbolIconSource () { Symbol = FASymbol.Settings }
-				)]
-			};
 			Page = NavigationView.Items[0];
 		}
 

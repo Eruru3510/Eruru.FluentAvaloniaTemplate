@@ -17,7 +17,7 @@ internal sealed partial class Program {
 		return AppBuilder.Configure<App> ()
 			.WithFont_SourceHanSansCN ()
 			.AfterPlatformServicesSetup (static appBuilder => {
-				appBuilder.ConfigureServices (static serviceCollection => {
+				appBuilder.ConfigureServices (static (_, serviceCollection) => {
 					serviceCollection.AddCommonServices ();
 					serviceCollection.AddViews ();
 					serviceCollection.AddViewModels ();

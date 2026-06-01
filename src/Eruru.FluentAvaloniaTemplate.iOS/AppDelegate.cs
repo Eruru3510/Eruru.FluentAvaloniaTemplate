@@ -16,7 +16,7 @@ namespace Eruru.FluentAvaloniaTemplate.iOS {
 		protected override AppBuilder CustomizeAppBuilder (AppBuilder builder) {
 			return base.CustomizeAppBuilder (builder)
 				.AfterPlatformServicesSetup (static appBuilder => {
-					appBuilder.ConfigureServices (static serviceCollection => {
+					appBuilder.ConfigureServices (static (_, serviceCollection) => {
 						serviceCollection.AddCommonServices ();
 						serviceCollection.AddViews ();
 						serviceCollection.AddViewModels ();

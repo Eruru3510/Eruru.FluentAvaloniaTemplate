@@ -13,10 +13,10 @@ namespace Eruru.FluentAvaloniaTemplate {
 
 	public static class ExtensionMethods {
 
-		public static AppBuilder ConfigureServices (this AppBuilder appBuilder, Action<ServiceCollection> action) {
+		public static AppBuilder ConfigureServices (this AppBuilder appBuilder, Action<AppBuilder, ServiceCollection> action) {
 			ArgumentNullException.ThrowIfNull (action, nameof (action));
 			var serviceCollection = new ServiceCollection ();
-			action (serviceCollection);
+			action (appBuilder, serviceCollection);
 			App.ServiceProvider = serviceCollection.BuildServiceProvider ();
 			return appBuilder;
 		}

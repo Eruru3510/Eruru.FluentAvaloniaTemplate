@@ -16,15 +16,18 @@
 		<DebugType>none</DebugType>
 	</PropertyGroup>
 
-	<Target Name="RemovePdbs" AfterTargets="Publish">
+	<Target Name="RemoveBuildPdbs" AfterTargets="Build">
+		<ItemGroup>
+			<PdbFiles Include="$(OutputPath)**\*.pdb" />
+		</ItemGroup>
+		<Delete Files="@(PdbFiles)" />
+	</Target>
+
+	<Target Name="RemovePublishPdbs" AfterTargets="Publish">
 		<ItemGroup>
 			<PdbFiles Include="$(PublishDir)**\*.pdb" />
 		</ItemGroup>
 		<Delete Files="@(PdbFiles)" />
-		<ItemGroup>
-			<RuntimePdbFiles Include="$(PublishDir)runtimes\**\*.pdb" />
-		</ItemGroup>
-		<Delete Files="@(RuntimePdbFiles)" />
 	</Target>
 
 	<ItemGroup Condition="'$(Configuration)' == 'Debug'">

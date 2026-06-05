@@ -18,11 +18,15 @@
 					<Setter Property="MinWidth" Value="130" />
 				</Style>
 			</StackPanel.Styles>
-			<Grid
+			<StackPanel
 				Height="90"
 				Margin="0,0,0,10"
-				ColumnDefinitions="*,Auto"
-				RowDefinitions="*,Auto">
+				Orientation="Horizontal">
+				<StackPanel.Styles>
+					<Style Selector="TextBlock">
+						<Setter Property="TextWrapping" Value="NoWrap" />
+					</Style>
+				</StackPanel.Styles>
 				<DockPanel>
 					<Image
 						Height="78"
@@ -30,11 +34,6 @@
 						RenderOptions.BitmapInterpolationMode="HighQuality"
 						Source="/Assets/avalonia-logo.ico" />
 					<StackPanel Margin="12,0" Spacing="0">
-						<StackPanel.Styles>
-							<Style Selector="TextBlock">
-								<Setter Property="TextWrapping" Value="NoWrap" />
-							</Style>
-						</StackPanel.Styles>
 						<TextBlock Text="FluentAvalonia" Theme="{StaticResource TitleTextBlockStyle}" />
 						<TextBlock Text="{Binding CurrentFluentAvaloniaVersion}" Theme="{StaticResource BodyTextBlockStyle}" />
 						<TextBlock Text="MIT License" Theme="{StaticResource CaptionTextBlockStyle}" />
@@ -44,10 +43,7 @@
 							Theme="{StaticResource CaptionTextBlockStyle}" />
 					</StackPanel>
 				</DockPanel>
-				<DockPanel
-					Name="HeaderRightContent"
-					Grid.Column="1"
-					Opacity="1">
+				<DockPanel Grid.Column="1" Opacity="1">
 					<DockPanel.RenderTransform>
 						<TranslateTransform X="0" Y="0" />
 					</DockPanel.RenderTransform>
@@ -68,7 +64,7 @@
 							Theme="{StaticResource CaptionTextBlockStyle}" />
 					</StackPanel>
 				</DockPanel>
-			</Grid>
+			</StackPanel>
 			<ui:FASettingsExpander
 				Description="{I18N Key={x:Static res:LangKeys.ChangeCurrentAppLanguage}}"
 				Header="{I18N Key={x:Static res:LangKeys.AppLanguage}}"

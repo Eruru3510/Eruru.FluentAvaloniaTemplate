@@ -1,11 +1,9 @@
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using Antelcat.I18N.Avalonia;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using Eruru.Debouncer;
 using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.Resources;
@@ -95,11 +93,6 @@ namespace Eruru.FluentAvaloniaTemplate.ViewModels {
 		public void Dispose () {
 			Dispose (true);
 			GC.SuppressFinalize (this);
-		}
-
-		[RelayCommand]
-		static void OpenUrl (string url) {
-			Process.Start (new ProcessStartInfo (url) { UseShellExecute = true });
 		}
 
 		void JsonConfigOnChanged () {

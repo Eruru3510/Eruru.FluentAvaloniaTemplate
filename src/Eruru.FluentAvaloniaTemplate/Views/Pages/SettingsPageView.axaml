@@ -347,8 +347,7 @@
 			<ui:FASettingsExpander Header="About" IconSource="{StaticResource InfoIcon}">
 				<ui:FASettingsExpanderItem
 					ActionIconSource="Open"
-					Command="{Binding OpenUrlCommand}"
-					CommandParameter="https://github.com/amwx/FluentAvalonia"
+					Click="FASettingsExpanderItem_Click"
 					Content="Found a bug? Want a new feature, control, or sample?"
 					IsClickEnabled="True" />
 				<ui:FASettingsExpanderItem Content="Clone FluentAvalonia repository">

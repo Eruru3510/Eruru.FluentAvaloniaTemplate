@@ -14,7 +14,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 			return Dispatcher.UIThread.InvokeAsync (async () => {
 				var contentDialog = new FAContentDialog () {
 					Title = CreateTitle (title),
-					Content = new SelectableTextBlock () { Text = $"{exception}", TextWrapping = TextWrapping.Wrap },
+					Content = CreateContent (exception),
 					PrimaryButtonText = I18NExtension.Translate (LangKeys.Ok)
 				};
 				await contentDialog.ShowAsync ().ConfigureAwait (false);
@@ -25,7 +25,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 			return Dispatcher.UIThread.InvokeAsync (async () => {
 				var contentDialog = new FAContentDialog () {
 					Title = CreateTitle (title),
-					Content = new SelectableTextBlock () { Text = $"{content}", TextWrapping = TextWrapping.Wrap },
+					Content = CreateContent (content),
 					PrimaryButtonText = I18NExtension.Translate (LangKeys.Ok)
 				};
 				await contentDialog.ShowAsync ().ConfigureAwait (false);
@@ -33,14 +33,23 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 		}
 
 #pragma warning disable CA1822 // 将成员标记为 static
-		TextBlock? CreateTitle (string? title = null) {
+		TextBlock? CreateTitle (object? title = null) {
 #pragma warning restore CA1822 // 将成员标记为 static
-			if (string.IsNullOrEmpty (title)) {
+			if (title == null) {
 				return null;
 			}
-			var textBlock = new TextBlock () { Text = title };
+			var textBlock = new TextBlock () { Text = $"{title}" };
 			textBlock.Bind (TextBlock.FontFamilyProperty, new DynamicResourceExtension ("ContentControlThemeFontFamily"));
 			return textBlock;
+		}
+
+#pragma warning disable CA1822 // 将成员标记为 static
+		SelectableTextBlock? CreateContent (object? content = null) {
+#pragma warning restore CA1822 // 将成员标记为 static
+			if (content == null) {
+				return null;
+			}
+			return new SelectableTextBlock () { Text = $"{content}", TextWrapping = TextWrapping.Wrap };
 		}
 
 	}

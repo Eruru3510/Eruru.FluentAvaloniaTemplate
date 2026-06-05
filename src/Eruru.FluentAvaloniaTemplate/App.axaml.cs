@@ -109,13 +109,10 @@ namespace Eruru.FluentAvaloniaTemplate {
 		}
 
 		void TrayIcon_Clicked (object? sender, EventArgs e) {
-			if (ServiceProvider is not ServiceProvider serviceProvider) {
-				return;
-			}
-			if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) {
-				return;
-			}
-			if (desktop.MainWindow is not MainWindowView mainWindowView) {
+			if (ServiceProvider is not ServiceProvider serviceProvider
+				|| ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop
+				|| desktop.MainWindow is not MainWindowView mainWindowView
+			) {
 				return;
 			}
 			try {

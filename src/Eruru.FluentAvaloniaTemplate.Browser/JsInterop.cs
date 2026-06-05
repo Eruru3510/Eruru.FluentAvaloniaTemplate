@@ -13,6 +13,9 @@ namespace Eruru.FluentAvaloniaTemplate.Browser {
 		[JSImport ("globalThis.window.console.error")]
 		public static partial void ConsoleError (string text);
 
+		[JSImport ("INTERNAL.loadSatelliteAssemblies")]
+		public static partial Task LoadSatelliteAssembliesAsync (string[] culturesToLoad);
+
 	}
 
 }

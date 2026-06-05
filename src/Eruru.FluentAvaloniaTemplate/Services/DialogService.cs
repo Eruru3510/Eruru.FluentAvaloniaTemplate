@@ -35,7 +35,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 #pragma warning disable CA1822 // 将成员标记为 static
 		TextBlock? CreateTitle (string? title = null) {
 #pragma warning restore CA1822 // 将成员标记为 static
-			if (string.IsNullOrWhiteSpace (title)) {
+			if (string.IsNullOrEmpty (title)) {
 				return null;
 			}
 			var textBlock = new TextBlock () { Text = title };

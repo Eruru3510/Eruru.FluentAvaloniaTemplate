@@ -18,7 +18,7 @@
 
 	<Target Name="RemoveBuildPdbs" AfterTargets="Build">
 		<ItemGroup>
-			<PdbFiles Include="$(OutputPath)**\*.pdb" />
+			<PdbFiles Include="$(OutputPath)runtimes\**\*.pdb" />
 		</ItemGroup>
 		<Delete Files="@(PdbFiles)" />
 	</Target>

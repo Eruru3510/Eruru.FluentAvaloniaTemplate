@@ -14,9 +14,7 @@ namespace Eruru.FluentAvaloniaTemplate.Models {
 	public class Config {
 
 		public static Collection<KeyValuePair<string, string>> AppLanguages { get; } = [
-			new (I18NExtension.Translate (LangKeys.Default) ?? LangKeys.Default, string.Empty),
-			new ("English (United States)", "en-US"),
-			new ("中文 (简体)", "zh-CN")
+			new (I18NExtension.Translate (LangKeys.Default) ?? LangKeys.Default, string.Empty), ..Api.AppLanguages
 		];
 		public static Collection<KeyValuePair<string, string>> AppFonts { get; } = [.. FontManager.Current.SystemFonts
 			.Where (x => {

@@ -5,12 +5,13 @@ using Eruru.FluentAvaloniaTemplate.Browser;
 
 internal sealed partial class Program {
 
-	private static Task Main (string[] args) {
-		return BuildAvaloniaApp ()
+	private static async Task Main (string[] args) {
+		await JsInterop.LoadSatelliteAssembliesAsync ([.. Api.AppLanguages.Select (x => x.Value)]).ConfigureAwait (false);
+		await BuildAvaloniaApp ()
 #if DEBUG
 			.WithDeveloperTools ()
 #endif
-			.StartBrowserAppAsync ("out");
+			.StartBrowserAppAsync ("out").ConfigureAwait (false);
 	}
 
 	public static AppBuilder BuildAvaloniaApp () {

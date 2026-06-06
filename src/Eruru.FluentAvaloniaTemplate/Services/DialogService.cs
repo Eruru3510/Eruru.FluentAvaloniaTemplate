@@ -73,8 +73,8 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 						Dispatcher.UIThread.Invoke (() => waitDialogContext.ContentDialog.Hide (
 							task.IsCompletedSuccessfully ? FAContentDialogResult.Primary : FAContentDialogResult.None
 						));
-					}, waitDialogContext,
-					CancellationToken.None, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Default
+					},
+					waitDialogContext, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default
 				);
 #pragma warning disable CA1031 // 不捕获常规异常类型
 			} catch (Exception exception) {
@@ -89,7 +89,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 				if (contentDialog.Tag is not WaitDialogContext waitDialogContext) {
 					return true;
 				}
-				_ = waitDialogContext.CancellationTokenSource.CancelAsync ();
+				_ = waitDialogContext.CancellationTokenSource.CancelAsync ().ContinueWithShowExceptionAsync ();
 				switch (e.Result) {
 					case FAContentDialogResult.Primary:
 					case FAContentDialogResult.None:

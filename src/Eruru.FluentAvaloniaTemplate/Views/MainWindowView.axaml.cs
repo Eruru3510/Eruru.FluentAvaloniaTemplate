@@ -21,18 +21,11 @@ namespace Eruru.FluentAvaloniaTemplate.Views {
 			try {
 				InitializeComponent ();
 				TitleBar.ExtendsContentIntoTitleBar = true;
+				JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
+				SplashScreen = App.ServiceProvider?.GetRequiredService<SplashScreen> ();
 				DataContext = App.ServiceProvider?.GetRequiredService<MainWindowViewModel> ();
 				PropertyChanged += MainWindowView_PropertyChanged;
-			} catch {
-				Interlocked.Decrement (ref Counter);
-				throw;
-			}
-		}
-		public MainWindowView (SplashScreen splashScreen, JsonConfig<Config, App> jsonConfig) : this () {
-			try {
-				SplashScreen = splashScreen;
-				JsonConfig = jsonConfig;
-				if (JsonConfig.Read () is not Config value) {
+				if (JsonConfig?.Read () is not Config value) {
 					return;
 				}
 				Width = Math.Max (MinWidth, Math.Min (MaxWidth, value.WindowWidth ?? Width));

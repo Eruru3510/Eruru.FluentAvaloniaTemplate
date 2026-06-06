@@ -13,12 +13,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 
 		public Task<FAContentDialogResult> ShowDialogAsync (FAContentDialog contentDialog) {
 			return Dispatcher.UIThread.InvokeAsync (async () => {
-				if (contentDialog.Title is string title) {
-					contentDialog.Title = CreateTitle (title);
-				}
-				if (contentDialog.Content is Exception exception) {
-					contentDialog.Content = CreateContent (exception);
-				}
+				FormatContentDialog (contentDialog);
 				return await contentDialog.ShowAsync ().ConfigureAwait (false);
 			});
 		}
@@ -37,12 +32,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 			FAContentDialog contentDialog, Func<FAContentDialog, CancellationToken, Task> callbackAsync
 		) {
 			return Dispatcher.UIThread.InvokeAsync (async () => {
-				if (contentDialog.Title is string title) {
-					contentDialog.Title = CreateTitle (title);
-				}
-				if (contentDialog.Content is string content) {
-					contentDialog.Content = CreateTitle (content);
-				}
+				FormatContentDialog (contentDialog);
 				using var cancellationTokenSource = new CancellationTokenSource ();
 				var waitDialogContext = new WaitDialogContext (callbackAsync, contentDialog, cancellationTokenSource);
 				contentDialog.Tag = waitDialogContext;
@@ -110,24 +100,29 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 			});
 		}
 
-#pragma warning disable CA1822 // 将成员标记为 static
-		TextBlock? CreateTitle (object? title = null) {
-#pragma warning restore CA1822 // 将成员标记为 static
-			if (title == null) {
-				return null;
-			}
-			var textBlock = new TextBlock () { Text = $"{title}" };
-			textBlock.Bind (TextBlock.FontFamilyProperty, new DynamicResourceExtension ("ContentControlThemeFontFamily"));
-			return textBlock;
+		void FormatContentDialog (FAContentDialog contentDialog) {
+			contentDialog.Title = FormatTitle (contentDialog.Title);
+			contentDialog.Content = FormatContent (contentDialog.Content);
 		}
 
 #pragma warning disable CA1822 // 将成员标记为 static
-		TextBox? CreateContent (object? content = null) {
+		object? FormatTitle (object? title = null) {
 #pragma warning restore CA1822 // 将成员标记为 static
-			if (content == null) {
-				return null;
+			if (title is string value) {
+				var textBlock = new TextBlock () { Text = $"{value}", TextWrapping = TextWrapping.Wrap };
+				textBlock.Bind (TextBlock.FontFamilyProperty, new DynamicResourceExtension ("ContentControlThemeFontFamily"));
+				return textBlock;
 			}
-			return new TextBox () { Text = $"{content}", TextWrapping = TextWrapping.Wrap };
+			return title;
+		}
+
+#pragma warning disable CA1822 // 将成员标记为 static
+		object? FormatContent (object? content = null) {
+#pragma warning restore CA1822 // 将成员标记为 static
+			if (content is Exception exception) {
+				return new TextBox () { Text = $"{exception}", TextWrapping = TextWrapping.Wrap };
+			}
+			return content;
 		}
 
 		sealed record class WaitDialogContext (

@@ -121,6 +121,9 @@
   <data name="AppTheme" xml:space="preserve">
     <value>App Theme</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="ChangeCurrentAppFlowDirection" xml:space="preserve">
     <value>Change the current app flow direction</value>
   </data>

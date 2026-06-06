@@ -133,6 +133,15 @@ namespace Eruru.FluentAvaloniaTemplate.Resources {
         }
         
         /// <summary>
+        ///   查找类似 Cancel 的本地化字符串。
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Change the current app flow direction 的本地化字符串。
         /// </summary>
         internal static string ChangeCurrentAppFlowDirection {

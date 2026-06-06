@@ -17,16 +17,14 @@
 				<Style Selector="ComboBox">
 					<Setter Property="MinWidth" Value="130" />
 				</Style>
+				<Style Selector="TextBlock">
+					<Setter Property="TextWrapping" Value="Wrap" />
+				</Style>
 			</StackPanel.Styles>
 			<StackPanel
 				Height="90"
 				Margin="0,0,0,10"
 				Orientation="Horizontal">
-				<StackPanel.Styles>
-					<Style Selector="TextBlock">
-						<Setter Property="TextWrapping" Value="NoWrap" />
-					</Style>
-				</StackPanel.Styles>
 				<DockPanel>
 					<Image
 						Height="78"
@@ -358,7 +356,7 @@
 				<ui:FASettingsExpanderItem>
 					<StackPanel Spacing="4">
 						<TextBlock Text="Dependencies" />
-						<TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">
+						<TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}">
 							<Run>All resources, brushes, and control naming come from the WinUI repository (https://github.com/microsoft/microsoft-ui-xaml) which is licensed under the MIT license.</Run>
 							<LineBreak />
 							<LineBreak />
@@ -375,7 +373,7 @@
 				<ui:FASettingsExpanderItem>
 					<StackPanel Spacing="4">
 						<TextBlock Text="License" />
-						<TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap">
+						<TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}">
 							<Run>FluentAvalonia is licensed under the MIT license.</Run>
 							<LineBreak />
 							<Run>FAControlsGallery © amwx 2023</Run>

@@ -12,6 +12,5 @@
 	mc:Ignorable="d">
 	<StackPanel Margin="8">
 		<TextBlock Text="{I18N Key={x:Static res:LangKeys.HomePage}}" />
-		<TextBlock Text="{Binding Text}" />
 	</StackPanel>
 </UserControl>

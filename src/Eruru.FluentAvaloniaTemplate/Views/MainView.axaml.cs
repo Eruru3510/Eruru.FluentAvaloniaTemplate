@@ -2,7 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
+using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
+using Eruru.JsonConfig;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,10 +13,13 @@ namespace Eruru.FluentAvaloniaTemplate.Views {
 
 	public partial class MainView : UserControl {
 
+		readonly JsonConfig<Config, App>? JsonConfig;
 		int Counter;
+		int IsPaneOpenCounter;
 
 		public MainView () {
 			InitializeComponent ();
+			JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
 			Frame.NavigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationPageFactory> ();
 			DataContext = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
 		}
@@ -44,6 +49,15 @@ namespace Eruru.FluentAvaloniaTemplate.Views {
 
 		void NavigationView_DisplayModeChanged (object? sender, FANavigationViewDisplayModeChangedEventArgs e) {
 			Frame.Padding = e.DisplayMode == FANavigationViewDisplayMode.Minimal ? new Thickness (0, 40, 0, 0) : new Thickness ();
+			if (e.DisplayMode != FANavigationViewDisplayMode.Expanded) {
+				return;
+			}
+			Interlocked.Increment (ref IsPaneOpenCounter);
+			try {
+				NavigationView.IsPaneOpen = JsonConfig?.Read ()?.IsNavigationViewExpanded ?? true;
+			} finally {
+				Interlocked.Decrement (ref IsPaneOpenCounter);
+			}
 		}
 
 		void NavigationView_SelectionChanged (object? sender, FANavigationViewSelectionChangedEventArgs e) {
@@ -68,6 +82,19 @@ namespace Eruru.FluentAvaloniaTemplate.Views {
 			}
 			navigationItemViewModel.Initialize ();
 			control.DataContext = navigationItemViewModel.DataContext;
+		}
+
+		void NavigationView_PaneOpened (FANavigationView sender, EventArgs _) {
+			if (Volatile.Read (ref IsPaneOpenCounter) > 0 || sender.DisplayMode != FANavigationViewDisplayMode.Expanded) {
+				return;
+			}
+			var task = JsonConfig?.TryWriteAsync (static (jsonConfig, value, state) => {
+				value.IsNavigationViewExpanded = state.NavigationView.IsPaneOpen;
+			}, this).ContinueWithShowExceptionAsync ();
+		}
+
+		internal void NavigationView_PaneClosed (FANavigationView sender, EventArgs e) {
+			NavigationView_PaneOpened (sender, e);
 		}
 
 	}

@@ -46,6 +46,8 @@
 			IsBackEnabled="{Binding #Frame.CanGoBack}"
 			IsSettingsVisible="False"
 			MenuItemsSource="{Binding NavigationView.Items}"
+			PaneClosed="NavigationView_PaneClosed"
+			PaneOpened="NavigationView_PaneOpened"
 			SelectedItem="{Binding Page}"
 			SelectionChanged="NavigationView_SelectionChanged">
 			<ui:FANavigationView.Resources>

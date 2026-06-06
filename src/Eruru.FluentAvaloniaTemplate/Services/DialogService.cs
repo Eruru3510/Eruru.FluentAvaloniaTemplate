@@ -120,7 +120,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services {
 		object? FormatContent (object? content = null) {
 #pragma warning restore CA1822 // 将成员标记为 static
 			if (content is Exception exception) {
-				return new TextBox () { Text = $"{exception}", TextWrapping = TextWrapping.Wrap };
+				return new TextBox () { Text = $"{exception}", TextWrapping = TextWrapping.Wrap, IsReadOnly = true };
 			}
 			return content;
 		}

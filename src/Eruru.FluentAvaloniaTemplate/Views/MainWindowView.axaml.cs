@@ -92,16 +92,10 @@ namespace Eruru.FluentAvaloniaTemplate.Views {
 		}
 
 		void MainWindowView_PropertyChanged (object? sender, AvaloniaPropertyChangedEventArgs e) {
-			if (e.Property != WindowStateProperty) {
-				return;
-			}
-			if (Volatile.Read (ref Counter) > 0 || Design.IsDesignMode || WindowState == WindowState.Minimized) {
-				return;
-			}
-			if (JsonConfig == null || e.NewValue == e.OldValue) {
-				return;
-			}
-			if (JsonConfig.Read ()?.WindowState == WindowState) {
+			if (e.Property != WindowStateProperty || Volatile.Read (ref Counter) > 0 || Design.IsDesignMode
+				|| WindowState == WindowState.Minimized || JsonConfig == null
+				|| JsonConfig.Read ()?.WindowState == WindowState
+			) {
 				return;
 			}
 			_ = JsonConfig.TryWriteAsync (static (_, value, state) => {

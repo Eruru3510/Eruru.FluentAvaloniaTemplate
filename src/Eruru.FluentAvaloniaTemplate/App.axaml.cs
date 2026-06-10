@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -110,11 +111,14 @@ public partial class App : Application {
 		if (ServiceProvider is not ServiceProvider serviceProvider
 			|| ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop
 			|| desktop.MainWindow is not MainWindowView mainWindowView
+			|| serviceProvider.GetRequiredService<AppViewModel> () is not AppViewModel appViewModel
+			|| serviceProvider.GetRequiredService<JsonConfig<Config, App>> () is not JsonConfig<Config, App> jsonConfig
 		) {
 			return;
 		}
 		try {
-			serviceProvider.GetRequiredService<AppViewModel> ().IsShowTrayIcon = true;
+			appViewModel.IsShowTrayIcon = true;
+			mainWindowView.WindowState = jsonConfig.Read ()?.WindowState ?? WindowState.Normal;
 			mainWindowView.Show ();
 			mainWindowView.Activate ();
 		} finally {

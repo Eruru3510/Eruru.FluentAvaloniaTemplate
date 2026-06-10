@@ -3,21 +3,19 @@ using Avalonia.Interactivity;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Eruru.FluentAvaloniaTemplate {
+namespace Eruru.FluentAvaloniaTemplate;
 
-	public partial class SettingsPageView : UserControl {
+public partial class SettingsPageView : UserControl {
 
-		public SettingsPageView () {
-			InitializeComponent ();
-			DataContext = App.ServiceProvider?.GetRequiredService<SettingsPageViewModel> ();
-		}
+	public SettingsPageView () {
+		InitializeComponent ();
+		DataContext = App.ServiceProvider?.GetRequiredService<SettingsPageViewModel> ();
+	}
 
-		void FASettingsExpanderItem_Click (object? sender, RoutedEventArgs e) {
-			_ = TopLevel.GetTopLevel (this)?.Launcher.LaunchUriAsync (
-				new ("https://github.com/amwx/FluentAvalonia")
-			).ContinueWithShowExceptionAsync ();
-		}
-
+	void FASettingsExpanderItem_Click (object? sender, RoutedEventArgs e) {
+		_ = TopLevel.GetTopLevel (this)?.Launcher.LaunchUriAsync (
+			new ("https://github.com/amwx/FluentAvalonia")
+		).ContinueWithShowExceptionAsync ();
 	}
 
 }

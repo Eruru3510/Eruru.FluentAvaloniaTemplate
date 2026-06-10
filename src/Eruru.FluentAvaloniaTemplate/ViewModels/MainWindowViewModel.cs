@@ -1,7 +1,5 @@
-namespace Eruru.FluentAvaloniaTemplate.ViewModels {
+namespace Eruru.FluentAvaloniaTemplate.ViewModels;
 
-	public class MainWindowViewModel : ViewModelBase {
-
-	}
+public class MainWindowViewModel : ViewModelBase {
 
 }

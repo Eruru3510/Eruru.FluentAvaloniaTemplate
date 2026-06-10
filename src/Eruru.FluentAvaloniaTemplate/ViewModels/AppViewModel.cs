@@ -1,12 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Eruru.FluentAvaloniaTemplate.ViewModels {
+namespace Eruru.FluentAvaloniaTemplate.ViewModels;
 
-	public partial class AppViewModel : ViewModelBase {
+public partial class AppViewModel : ViewModelBase {
 
-		[ObservableProperty]
-		public partial bool IsShowTrayIcon { get; set; } = true;
-
-	}
+	[ObservableProperty]
+	public partial bool IsShowTrayIcon { get; set; } = true;
 
 }

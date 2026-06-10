@@ -1,7 +1,5 @@
-namespace Eruru.FluentAvaloniaTemplate.ViewModels {
+namespace Eruru.FluentAvaloniaTemplate.ViewModels;
 
-	public class SplashScreenViewModel : ViewModelBase {
-
-	}
+public class SplashScreenViewModel : ViewModelBase {
 
 }

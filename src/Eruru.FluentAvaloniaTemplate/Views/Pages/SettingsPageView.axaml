@@ -41,7 +41,7 @@
 							Theme="{StaticResource CaptionTextBlockStyle}" />
 					</StackPanel>
 				</DockPanel>
-				<DockPanel Grid.Column="1" Opacity="1">
+				<DockPanel Opacity="1">
 					<DockPanel.RenderTransform>
 						<TranslateTransform X="0" Y="0" />
 					</DockPanel.RenderTransform>

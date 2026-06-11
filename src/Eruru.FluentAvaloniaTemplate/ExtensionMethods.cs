@@ -55,6 +55,7 @@ public static class ExtensionMethods {
 		}
 		jsonSerializerOptions.Converters.Add (new ColorJsonConverter ());
 		var jsonConfigContext = new JsonConfigContext (jsonSerializerOptions);
+		serviceCollection.AddSingleton (jsonConfigContext);
 #pragma warning disable CA2000 // 丢失范围之前释放对象
 		var jsonConfig = new JsonConfig<Config, App> ()
 			.ConfigureSource (

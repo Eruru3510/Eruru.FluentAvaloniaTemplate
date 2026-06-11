@@ -4,7 +4,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:res="using:Eruru.FluentAvaloniaTemplate.Resources"
 	xmlns:ui="using:FluentAvalonia.UI.Controls"
 	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
 	d:DesignHeight="450"
@@ -45,6 +44,7 @@
 			IsBackButtonVisible="True"
 			IsBackEnabled="{Binding #Frame.CanGoBack}"
 			IsSettingsVisible="False"
+			MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
 			MenuItemsSource="{Binding NavigationView.Items}"
 			PaneClosed="NavigationView_PaneClosed"
 			PaneOpened="NavigationView_PaneOpened"
@@ -61,9 +61,6 @@
 						Tag="{Binding DataContext}" />
 				</DataTemplate>
 			</ui:FANavigationView.Resources>
-			<ui:FANavigationView.MenuItemTemplate>
-				<StaticResource ResourceKey="NavigationViewItemTemplate" />
-			</ui:FANavigationView.MenuItemTemplate>
 			<ui:FAFrame Name="Frame" Navigated="Frame_Navigated" />
 		</ui:FANavigationView>
 	</Grid>

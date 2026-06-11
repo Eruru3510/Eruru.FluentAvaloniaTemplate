@@ -29,11 +29,17 @@ public partial class MainView : UserControl {
 
 	protected override void OnLoaded (RoutedEventArgs e) {
 		base.OnLoaded (e);
-		DialogService?.StorageProvider = TopLevel.GetTopLevel (this)?.StorageProvider;
+		if (TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
+			return;
+		}
+		if (DialogService != null) {
+			DialogService.StorageProvider = topLevel.StorageProvider;
+			DialogService.Launcher = topLevel.Launcher;
+		}
 		if (!OperatingSystem.IsAndroid ()) {
 			return;
 		}
-		TopLevel.GetTopLevel (this)?.InsetsManager?.DisplayEdgeToEdgePreference = true;
+		topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
 	}
 
 	protected override void OnSizeChanged (SizeChangedEventArgs e) {

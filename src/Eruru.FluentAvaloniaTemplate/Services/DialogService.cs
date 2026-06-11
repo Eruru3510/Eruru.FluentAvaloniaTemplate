@@ -12,6 +12,7 @@ namespace Eruru.FluentAvaloniaTemplate.Services;
 
 public class DialogService {
 
+	public ILauncher? Launcher { get; set; }
 	public IStorageProvider? StorageProvider { get; set; }
 
 	public Task<FAContentDialogResult> ShowDialogAsync (FAContentDialog contentDialog) {

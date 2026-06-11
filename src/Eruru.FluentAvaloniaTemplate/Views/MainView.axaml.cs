@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
@@ -84,8 +85,15 @@ public partial class MainView : UserControl {
 		Interlocked.Increment (ref Counter);
 		try {
 			NavigationView.SelectedItem = navigationItemViewModel;
-		} finally {
+			Dispatcher.UIThread.Post (static state => {
+				if (state is not MainView mainView) {
+					return;
+				}
+				Interlocked.Decrement (ref mainView.Counter);
+			}, this);
+		} catch {
 			Interlocked.Decrement (ref Counter);
+			throw;
 		}
 		if (e.Content is not Control control) {
 			return;

@@ -264,6 +264,7 @@ public class Config {
 		IsUseCustomAccentColor = IsUseCustomAccentColor;
 		PredefinedAccentColor = PredefinedAccentColor;
 		CustomAccentColor = CustomAccentColor;
+		IsNavigationViewExpanded = IsNavigationViewExpanded;
 		IsMinimizeToTrayIcon = IsMinimizeToTrayIcon;
 		WindowWidth = WindowWidth;
 		WindowHeight = WindowHeight;

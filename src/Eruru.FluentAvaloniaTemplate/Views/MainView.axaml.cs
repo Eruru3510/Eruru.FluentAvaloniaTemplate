@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
 using Eruru.FluentAvaloniaTemplate.Models;
+using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
 using Eruru.JsonConfig;
 using FluentAvalonia.UI.Controls;
@@ -14,6 +15,7 @@ namespace Eruru.FluentAvaloniaTemplate.Views;
 public partial class MainView : UserControl {
 
 	readonly JsonConfig<Config, App>? JsonConfig;
+	readonly DialogService? DialogService;
 	int Counter;
 	int IsPaneOpenCounter;
 
@@ -21,11 +23,13 @@ public partial class MainView : UserControl {
 		InitializeComponent ();
 		JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
 		Frame.NavigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationPageFactory> ();
+		DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
 		DataContext = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
 	}
 
 	protected override void OnLoaded (RoutedEventArgs e) {
 		base.OnLoaded (e);
+		DialogService?.StorageProvider = TopLevel.GetTopLevel (this)?.StorageProvider;
 		if (!OperatingSystem.IsAndroid ()) {
 			return;
 		}

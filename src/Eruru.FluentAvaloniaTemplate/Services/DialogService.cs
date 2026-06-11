@@ -3,6 +3,7 @@ using Antelcat.I18N.Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using Eruru.FluentAvaloniaTemplate.Resources;
 using FluentAvalonia.UI.Controls;
@@ -10,6 +11,8 @@ using FluentAvalonia.UI.Controls;
 namespace Eruru.FluentAvaloniaTemplate.Services;
 
 public class DialogService {
+
+	public IStorageProvider? StorageProvider { get; set; }
 
 	public Task<FAContentDialogResult> ShowDialogAsync (FAContentDialog contentDialog) {
 		return Dispatcher.UIThread.InvokeAsync (async () => {

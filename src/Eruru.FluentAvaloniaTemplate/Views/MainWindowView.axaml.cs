@@ -14,6 +14,7 @@ public partial class MainWindowView : FAAppWindow {
 	internal int Counter;
 
 	readonly JsonConfig<Config, App>? JsonConfig;
+	readonly AppViewModel? AppViewModel;
 	Size WindowSize;
 
 	public MainWindowView () {
@@ -23,6 +24,7 @@ public partial class MainWindowView : FAAppWindow {
 			TitleBar.ExtendsContentIntoTitleBar = true;
 			JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
 			SplashScreen = App.ServiceProvider?.GetRequiredService<SplashScreen> ();
+			AppViewModel = App.ServiceProvider?.GetRequiredService<AppViewModel> ();
 			DataContext = App.ServiceProvider?.GetRequiredService<MainWindowViewModel> ();
 			PropertyChanged += MainWindowView_PropertyChanged;
 			if (JsonConfig?.Read () is not Config value) {
@@ -59,10 +61,7 @@ public partial class MainWindowView : FAAppWindow {
 					}
 					Hide ();
 					GC.Collect ();
-					if (App.ServiceProvider?.GetRequiredService<AppViewModel> () is not AppViewModel appViewModel) {
-						return;
-					}
-					appViewModel.IsShowTrayIcon = true;
+					AppViewModel?.IsShowTrayIcon = true;
 				} catch {
 					Interlocked.Decrement (ref Counter);
 					throw;

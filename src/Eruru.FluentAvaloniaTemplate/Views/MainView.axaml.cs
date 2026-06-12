@@ -100,6 +100,20 @@ public partial class MainView : UserControl {
 		}
 		navigationItemViewModel.Initialize ();
 		control.DataContext = navigationItemViewModel.DataContext;
+		if (e.Source is Control sourceControl) {
+			if (sourceControl is INavigationPage sourceControlNavigationViewPage) {
+				sourceControlNavigationViewPage.OnHide ();
+			}
+			if (sourceControl.DataContext is INavigationPage sourceDataContextNavigationViewPage) {
+				sourceDataContextNavigationViewPage.OnHide ();
+			}
+		}
+		if (control is INavigationPage navigationViewPage) {
+			navigationViewPage.OnShow ();
+		}
+		if (control.DataContext is INavigationPage dataContextNavigationViewPage) {
+			dataContextNavigationViewPage.OnShow ();
+		}
 	}
 
 	void NavigationView_PaneOpened (FANavigationView sender, EventArgs _) {

@@ -25,6 +25,7 @@ public static class ExtensionMethods {
 		serviceCollection.AddSingleton<SplashScreen> ();
 		serviceCollection.AddSingleton<NavigationPageFactory> ();
 		serviceCollection.AddSingleton<DialogService> ();
+		serviceCollection.AddSingleton<PathService> ();
 	}
 
 	public static void AddViews (this ServiceCollection serviceCollection) {

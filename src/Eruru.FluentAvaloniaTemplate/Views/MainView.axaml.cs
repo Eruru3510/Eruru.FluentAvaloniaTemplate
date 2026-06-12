@@ -79,7 +79,7 @@ public partial class MainView : UserControl {
 	}
 
 	void Frame_Navigated (object sender, FANavigationEventArgs e) {
-		if (e.Parameter is not NavigationItemViewModel navigationItemViewModel) {
+		if (e.Parameter is not NavigationItemViewModel navigationItemViewModel || e.Content is not Control control) {
 			return;
 		}
 		Interlocked.Increment (ref Counter);
@@ -94,9 +94,6 @@ public partial class MainView : UserControl {
 		} catch {
 			Interlocked.Decrement (ref Counter);
 			throw;
-		}
-		if (e.Content is not Control control) {
-			return;
 		}
 		navigationItemViewModel.Initialize ();
 		control.DataContext = navigationItemViewModel.DataContext;

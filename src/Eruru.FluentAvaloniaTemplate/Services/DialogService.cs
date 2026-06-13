@@ -40,12 +40,13 @@ public class DialogService {
 	}
 
 	public Task<FAContentDialogResult> WaitDialogAsync (
-		FAContentDialog contentDialog, Func<FAContentDialog, CancellationToken, Task> callbackAsync
-	) {
+			FAContentDialog contentDialog, Func<FAContentDialog, object?, CancellationToken, Task<bool>> callbackAsync,
+			object? state = null
+		) {
 		return Dispatcher.UIThread.InvokeAsync (async () => {
 			FormatContentDialog (contentDialog);
 			using var cancellationTokenSource = new CancellationTokenSource ();
-			var waitDialogContext = new WaitDialogContext (callbackAsync, contentDialog, cancellationTokenSource);
+			var waitDialogContext = new WaitDialogContext (callbackAsync, contentDialog, cancellationTokenSource, state);
 			contentDialog.Tag = waitDialogContext;
 			contentDialog.Opened += ContentDialog_Opened;
 			contentDialog.Closing += ContentDialog_Closing;
@@ -60,11 +61,12 @@ public class DialogService {
 		});
 	}
 	public async Task<bool> WaitDialogAsync (
-		object content, Func<FAContentDialog, CancellationToken, Task> callbackAsync, object? title = null
+		object content, Func<FAContentDialog, object?, CancellationToken, Task<bool>> callbackAsync,
+		object? state = null, object? title = null
 	) {
 		return await Dispatcher.UIThread.InvokeAsync (async () => await WaitDialogAsync (new () {
 			Title = title, Content = content, SecondaryButtonText = I18NExtension.Translate (LangKeys.Cancel)
-		}, callbackAsync).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
+		}, callbackAsync, state).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
 	}
 
 	static void ContentDialog_Opened (FAContentDialog contentDialog, EventArgs e) {
@@ -72,8 +74,9 @@ public class DialogService {
 			return;
 		}
 		try {
-			var task = waitDialogContext.CallbackAsync (contentDialog, waitDialogContext.CancellationTokenSource.Token);
-			_ = task.ContinueWith (
+			_ = waitDialogContext.CallbackAsync (
+				contentDialog, waitDialogContext.State, waitDialogContext.CancellationTokenSource.Token
+			).ContinueWith (
 				static (task, state) => {
 					if (state is not WaitDialogContext waitDialogContext) {
 						return;
@@ -81,9 +84,8 @@ public class DialogService {
 					if (task.Exception != null) {
 						waitDialogContext.ExceptionDispatchInfo = ExceptionDispatchInfo.Capture (task.Exception);
 					}
-					Dispatcher.UIThread.Invoke (() => waitDialogContext.ContentDialog.Hide (
-						task.IsCompletedSuccessfully ? FAContentDialogResult.Primary : FAContentDialogResult.None
-					));
+					var result = task.IsCompletedSuccessfully && task.Result ? FAContentDialogResult.Primary : FAContentDialogResult.None;
+					Dispatcher.UIThread.Invoke (() => waitDialogContext.ContentDialog.Hide (result));
 				},
 				waitDialogContext, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default
 			);
@@ -137,8 +139,8 @@ public class DialogService {
 	}
 
 	sealed record class WaitDialogContext (
-		Func<FAContentDialog, CancellationToken, Task> CallbackAsync,
-		FAContentDialog ContentDialog, CancellationTokenSource CancellationTokenSource
+		Func<FAContentDialog, object?, CancellationToken, Task<bool>> CallbackAsync,
+		FAContentDialog ContentDialog, CancellationTokenSource CancellationTokenSource, object? State
 	) {
 
 		public ExceptionDispatchInfo? ExceptionDispatchInfo { get; set; }

@@ -37,6 +37,7 @@ public partial class MainView : UserControl {
 	protected override void OnLoaded (RoutedEventArgs e) {
 		try {
 			base.OnLoaded (e);
+			NavigationView.IsPaneOpen = JsonConfig?.Read ()?.IsNavigationViewExpanded ?? true;
 			if (TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
 				return;
 			}

@@ -22,14 +22,21 @@ public class DialogService {
 		});
 	}
 
-	public Task<FAContentDialogResult> ShowMessageAsync (object content, object? title = null) {
-		return Dispatcher.UIThread.InvokeAsync (async () => await ShowDialogAsync (new () {
+	public async Task<bool> ShowMessageAsync (object content, object? title = null) {
+		return await Dispatcher.UIThread.InvokeAsync (async () => await ShowDialogAsync (new () {
 			Title = title, Content = content, PrimaryButtonText = I18NExtension.Translate (LangKeys.Ok)
-		}).ConfigureAwait (false));
+		}).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
 	}
 
-	public Task<FAContentDialogResult> ShowExceptionAsync (Exception exception, object? title = null) {
+	public Task<bool> ShowExceptionAsync (Exception exception, object? title = null) {
 		return ShowMessageAsync (exception, title);
+	}
+
+	public async Task<bool> ShowAskAsync (object content, object? title = null) {
+		return await Dispatcher.UIThread.InvokeAsync (async () => await ShowDialogAsync (new () {
+			Title = title, Content = content, PrimaryButtonText = I18NExtension.Translate (LangKeys.Ok),
+			SecondaryButtonText = I18NExtension.Translate (LangKeys.Cancel)
+		}).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
 	}
 
 	public Task<FAContentDialogResult> WaitDialogAsync (
@@ -52,12 +59,12 @@ public class DialogService {
 			}
 		});
 	}
-	public Task<FAContentDialogResult> WaitDialogAsync (
+	public async Task<bool> WaitDialogAsync (
 		object content, Func<FAContentDialog, CancellationToken, Task> callbackAsync, object? title = null
 	) {
-		return Dispatcher.UIThread.InvokeAsync (async () => await WaitDialogAsync (new () {
+		return await Dispatcher.UIThread.InvokeAsync (async () => await WaitDialogAsync (new () {
 			Title = title, Content = content, SecondaryButtonText = I18NExtension.Translate (LangKeys.Cancel)
-		}, callbackAsync).ConfigureAwait (false));
+		}, callbackAsync).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
 	}
 
 	static void ContentDialog_Opened (FAContentDialog contentDialog, EventArgs e) {

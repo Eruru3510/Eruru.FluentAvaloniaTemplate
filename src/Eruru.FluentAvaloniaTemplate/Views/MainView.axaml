@@ -46,8 +46,6 @@
 			IsSettingsVisible="False"
 			MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
 			MenuItemsSource="{Binding NavigationView.Items}"
-			PaneClosed="NavigationView_PaneClosed"
-			PaneOpened="NavigationView_PaneOpened"
 			SelectedItem="{Binding Page}"
 			SelectionChanged="NavigationView_SelectionChanged">
 			<ui:FANavigationView.Resources>

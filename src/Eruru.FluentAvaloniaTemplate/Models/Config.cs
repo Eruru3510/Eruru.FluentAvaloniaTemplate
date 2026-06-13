@@ -245,7 +245,6 @@ public class Config {
 		}
 
 	}
-	public virtual bool? IsNavigationViewExpanded { get; set; }
 	public virtual bool? IsMinimizeToTrayIcon { get; set; }
 	public virtual double? WindowWidth { get; set; }
 	public virtual double? WindowHeight { get; set; }
@@ -264,7 +263,6 @@ public class Config {
 		IsUseCustomAccentColor = IsUseCustomAccentColor;
 		PredefinedAccentColor = PredefinedAccentColor;
 		CustomAccentColor = CustomAccentColor;
-		IsNavigationViewExpanded = IsNavigationViewExpanded;
 		IsMinimizeToTrayIcon = IsMinimizeToTrayIcon;
 		WindowWidth = WindowWidth;
 		WindowHeight = WindowHeight;

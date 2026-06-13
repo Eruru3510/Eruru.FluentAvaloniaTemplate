@@ -3,10 +3,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
 using Avalonia.Threading;
-using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
-using Eruru.JsonConfig;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,43 +13,29 @@ namespace Eruru.FluentAvaloniaTemplate.Views;
 
 public partial class MainView : UserControl {
 
-	readonly JsonConfig<Config, App>? JsonConfig;
 	readonly DialogService? DialogService;
 	int Counter;
-	int IsPaneOpenCounter;
 
 	public MainView () {
 		InitializeComponent ();
-		Interlocked.Increment (ref IsPaneOpenCounter);
-		try {
-			JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
-			Frame.NavigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationPageFactory> ();
-			DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
-			DataContext = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
-		} catch {
-			Interlocked.Decrement (ref IsPaneOpenCounter);
-			throw;
-		}
+		Frame.NavigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationPageFactory> ();
+		DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
+		DataContext = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
 	}
 
 	protected override void OnLoaded (RoutedEventArgs e) {
-		try {
-			base.OnLoaded (e);
-			NavigationView.IsPaneOpen = JsonConfig?.Read ()?.IsNavigationViewExpanded ?? true;
-			if (TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
-				return;
-			}
-			if (DialogService != null) {
-				DialogService.StorageProvider = topLevel.StorageProvider;
-				DialogService.Launcher = topLevel.Launcher;
-			}
-			if (!OperatingSystem.IsAndroid ()) {
-				return;
-			}
-			topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
-		} finally {
-			Interlocked.Decrement (ref IsPaneOpenCounter);
+		base.OnLoaded (e);
+		if (TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
+			return;
 		}
+		if (DialogService != null) {
+			DialogService.StorageProvider = topLevel.StorageProvider;
+			DialogService.Launcher = topLevel.Launcher;
+		}
+		if (!OperatingSystem.IsAndroid ()) {
+			return;
+		}
+		topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
 	}
 
 	protected override void OnSizeChanged (SizeChangedEventArgs e) {
@@ -71,15 +55,6 @@ public partial class MainView : UserControl {
 
 	void NavigationView_DisplayModeChanged (object? sender, FANavigationViewDisplayModeChangedEventArgs e) {
 		Frame.Padding = e.DisplayMode == FANavigationViewDisplayMode.Minimal ? new Thickness (0, 40, 0, 0) : new Thickness ();
-		if (e.DisplayMode != FANavigationViewDisplayMode.Expanded) {
-			return;
-		}
-		Interlocked.Increment (ref IsPaneOpenCounter);
-		try {
-			NavigationView.IsPaneOpen = JsonConfig?.Read ()?.IsNavigationViewExpanded ?? true;
-		} finally {
-			Interlocked.Decrement (ref IsPaneOpenCounter);
-		}
 	}
 
 	void NavigationView_SelectionChanged (object? sender, FANavigationViewSelectionChangedEventArgs e) {
@@ -122,19 +97,6 @@ public partial class MainView : UserControl {
 		if (control.DataContext is INavigationPage dataContextNavigationViewPage) {
 			dataContextNavigationViewPage.OnShow ();
 		}
-	}
-
-	void NavigationView_PaneOpened (FANavigationView sender, EventArgs _) {
-		if (Volatile.Read (ref IsPaneOpenCounter) > 0 || sender.DisplayMode != FANavigationViewDisplayMode.Expanded) {
-			return;
-		}
-		var task = JsonConfig?.TryWriteAsync (static (jsonConfig, value, state) => {
-			value.IsNavigationViewExpanded = state.NavigationView.IsPaneOpen;
-		}, this).ContinueWithShowExceptionAsync ();
-	}
-
-	internal void NavigationView_PaneClosed (FANavigationView sender, EventArgs e) {
-		NavigationView_PaneOpened (sender, e);
 	}
 
 }

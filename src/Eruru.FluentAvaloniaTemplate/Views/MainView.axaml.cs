@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
-using Avalonia.Threading;
 using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
@@ -17,15 +16,22 @@ public partial class MainView : UserControl {
 
 	readonly JsonConfig<Config, App>? JsonConfig;
 	readonly DialogService? DialogService;
-	int Counter;
+	NavigationItemViewModel? NavigationItemViewModel;
 	int IsPaneOpenCounter;
 
 	public MainView () {
 		InitializeComponent ();
 		JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
-		Frame.NavigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationPageFactory> ();
 		DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
-		DataContext = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
+		var navigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationService> ();
+		navigationPageFactory?.Frame = Frame;
+		Frame.NavigationPageFactory = navigationPageFactory;
+		var viewModel = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
+		DataContext = viewModel;
+		if (viewModel?.Page == null) {
+			return;
+		}
+		Frame.Navigate (viewModel.Page.ViewType, viewModel.Page);
 	}
 
 	protected override void OnLoaded (RoutedEventArgs e) {
@@ -41,6 +47,17 @@ public partial class MainView : UserControl {
 			return;
 		}
 		topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
+	}
+
+	protected override void OnSizeChanged (SizeChangedEventArgs e) {
+		base.OnSizeChanged (e);
+		if (!OperatingSystem.IsAndroid () || TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
+			return;
+		}
+		topLevel.InsetsManager?.IsSystemBarVisible = topLevel.Screens?.Primary?.CurrentOrientation switch {
+			ScreenOrientation.Landscape or ScreenOrientation.LandscapeFlipped => false,
+			_ => true
+		};
 	}
 
 	void NavigationView_Loaded (object? sender, RoutedEventArgs e) {
@@ -69,17 +86,6 @@ public partial class MainView : UserControl {
 		NavigationView_PaneOpened (sender, e);
 	}
 
-	protected override void OnSizeChanged (SizeChangedEventArgs e) {
-		base.OnSizeChanged (e);
-		if (!OperatingSystem.IsAndroid () || TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
-			return;
-		}
-		topLevel.InsetsManager?.IsSystemBarVisible = topLevel.Screens?.Primary?.CurrentOrientation switch {
-			ScreenOrientation.Landscape or ScreenOrientation.LandscapeFlipped => false,
-			_ => true
-		};
-	}
-
 	void NavigationView_BackRequested (object? sender, FANavigationViewBackRequestedEventArgs e) {
 		Frame.GoBack ();
 	}
@@ -88,8 +94,10 @@ public partial class MainView : UserControl {
 		Frame.Padding = e.DisplayMode == FANavigationViewDisplayMode.Minimal ? new Thickness (0, 40, 0, 0) : new Thickness ();
 	}
 
-	void NavigationView_SelectionChanged (object? sender, FANavigationViewSelectionChangedEventArgs e) {
-		if (Volatile.Read (ref Counter) > 0 || e.SelectedItem is not NavigationItemViewModel navigationItemViewModel) {
+	void NavigationView_ItemInvoked (object? sender, FANavigationViewItemInvokedEventArgs e) {
+		if (NavigationView.SelectedItem is not NavigationItemViewModel navigationItemViewModel
+			|| navigationItemViewModel == NavigationItemViewModel
+		) {
 			return;
 		}
 		Frame.Navigate (navigationItemViewModel.ViewType, navigationItemViewModel);
@@ -99,19 +107,13 @@ public partial class MainView : UserControl {
 		if (e.Parameter is not NavigationItemViewModel navigationItemViewModel || e.Content is not Control control) {
 			return;
 		}
-		Interlocked.Increment (ref Counter);
-		try {
-			NavigationView.SelectedItem = navigationItemViewModel;
-			Dispatcher.UIThread.Post (static state => {
-				if (state is not MainView mainView) {
-					return;
-				}
-				Interlocked.Decrement (ref mainView.Counter);
-			}, this);
-		} catch {
-			Interlocked.Decrement (ref Counter);
-			throw;
+		if (e.NavigationMode == FANavigationMode.New) {
+			navigationItemViewModel.Parent = DataContext is not MainViewModel viewModel
+				|| viewModel.NavigationView.Contains (navigationItemViewModel)
+				? null : NavigationItemViewModel;
 		}
+		NavigationItemViewModel = navigationItemViewModel;
+		NavigationView.SelectedItem = navigationItemViewModel.GetRoot ();
 		navigationItemViewModel.Initialize ();
 		control.DataContext = navigationItemViewModel.DataContext;
 		if (e.Source is Control sourceControl) {

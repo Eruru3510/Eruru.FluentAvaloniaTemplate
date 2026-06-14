@@ -44,20 +44,18 @@
 			IsBackButtonVisible="True"
 			IsBackEnabled="{Binding #Frame.CanGoBack}"
 			IsSettingsVisible="False"
+			ItemInvoked="NavigationView_ItemInvoked"
 			Loaded="NavigationView_Loaded"
 			MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
 			MenuItemsSource="{Binding NavigationView.Items}"
 			PaneClosed="NavigationView_PaneClosed"
-			PaneOpened="NavigationView_PaneOpened"
-			SelectedItem="{Binding Page}"
-			SelectionChanged="NavigationView_SelectionChanged">
+			PaneOpened="NavigationView_PaneOpened">
 			<ui:FANavigationView.Resources>
 				<DataTemplate x:Key="NavigationViewItemTemplate" x:DataType="vm:NavigationItemViewModel">
 					<ui:FANavigationViewItem
 						Content="{I18N {Binding Content}}"
 						ContentTemplate="{StaticResource NavigationViewItemTemplate}"
 						IconSource="{Binding IconSource}"
-						IsSelected="{Binding IsSelected}"
 						MenuItemsSource="{Binding Items}"
 						Tag="{Binding DataContext}" />
 				</DataTemplate>

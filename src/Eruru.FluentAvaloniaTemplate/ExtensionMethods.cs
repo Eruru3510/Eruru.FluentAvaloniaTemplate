@@ -23,7 +23,7 @@ public static class ExtensionMethods {
 
 	public static void AddCommonServices (this ServiceCollection serviceCollection) {
 		serviceCollection.AddSingleton<SplashScreen> ();
-		serviceCollection.AddSingleton<NavigationPageFactory> ();
+		serviceCollection.AddSingleton<NavigationService> ();
 		serviceCollection.AddSingleton<DialogService> ();
 		serviceCollection.AddSingleton<PathService> ();
 	}
@@ -68,6 +68,10 @@ public static class ExtensionMethods {
 		serviceCollection.AddSingleton (jsonConfig);
 	}
 
+	static void JsonConfig_OnSaved (object? sender) {
+		Debug.WriteLine ($"{nameof (JsonConfig_OnSaved)} {nameof (ExtensionMethods)}");
+	}
+
 	public static Task ContinueWithShowExceptionAsync (this Task task) {
 		ArgumentNullException.ThrowIfNull (task, nameof (task));
 		return task.ContinueWith (static task => {
@@ -89,10 +93,6 @@ public static class ExtensionMethods {
 			Console.WriteLine (task.Exception);
 			Debug.WriteLine (task.Exception);
 		}, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
-	}
-
-	static void JsonConfig_OnSaved (object? sender) {
-		Debug.WriteLine (nameof (JsonConfig_OnSaved));
 	}
 
 }

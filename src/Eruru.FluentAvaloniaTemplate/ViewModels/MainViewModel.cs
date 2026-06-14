@@ -8,9 +8,9 @@ namespace Eruru.FluentAvaloniaTemplate.ViewModels;
 public partial class MainViewModel : ViewModelBase {
 
 	[ObservableProperty]
-	public partial NavigationItemViewModel? Page { get; set; }
+	public partial NavigationItemViewModel Page { get; set; }
 	[ObservableProperty]
-	public partial NavigationViewModel? NavigationView { get; set; } = new () {
+	public partial NavigationViewModel NavigationView { get; set; } = new () {
 		Items = [new (
 			LangKeys.HomePage, typeof (HomePageView),
 			static state => (state as ServiceProvider)?.GetRequiredService<HomePageViewModel> (),
@@ -23,7 +23,8 @@ public partial class MainViewModel : ViewModelBase {
 		)]
 	};
 
-	public MainViewModel () {
+	public MainViewModel (NavigationService navigationPageFactory) {
+		ArgumentNullException.ThrowIfNull (navigationPageFactory, nameof (navigationPageFactory));
 		Page = NavigationView.Items[0];
 	}
 

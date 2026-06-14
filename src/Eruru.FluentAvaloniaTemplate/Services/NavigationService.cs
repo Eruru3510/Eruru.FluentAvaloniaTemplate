@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Eruru.FluentAvaloniaTemplate;
 
-public class NavigationPageFactory : IFANavigationPageFactory {
+public class NavigationService : IFANavigationPageFactory {
+
+	public FAFrame? Frame { get; set; }
 
 	public Control GetPage (Type srcType) {
 		return GetPageFromObject (App.ServiceProvider?.GetRequiredService (srcType));

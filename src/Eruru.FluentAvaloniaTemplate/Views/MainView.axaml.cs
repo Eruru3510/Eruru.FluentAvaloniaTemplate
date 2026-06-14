@@ -3,8 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
+using Eruru.JsonConfig;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +15,14 @@ namespace Eruru.FluentAvaloniaTemplate.Views;
 
 public partial class MainView : UserControl {
 
+	readonly JsonConfig<Config, App>? JsonConfig;
 	readonly DialogService? DialogService;
 	int Counter;
+	int IsPaneOpenCounter;
 
 	public MainView () {
 		InitializeComponent ();
+		JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
 		Frame.NavigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationPageFactory> ();
 		DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
 		DataContext = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
@@ -36,6 +41,32 @@ public partial class MainView : UserControl {
 			return;
 		}
 		topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
+	}
+
+	void NavigationView_Loaded (object? sender, RoutedEventArgs e) {
+		if (JsonConfig?.Read ()?.IsNavigationViewExpanded ?? true) {
+			return;
+		}
+		Interlocked.Increment (ref IsPaneOpenCounter);
+		try {
+			NavigationView.IsPaneOpen = true;
+			NavigationView.IsPaneOpen = false;
+		} finally {
+			Interlocked.Decrement (ref IsPaneOpenCounter);
+		}
+	}
+
+	void NavigationView_PaneOpened (FANavigationView sender, EventArgs _) {
+		if (Volatile.Read (ref IsPaneOpenCounter) > 0 || sender.DisplayMode != FANavigationViewDisplayMode.Expanded) {
+			return;
+		}
+		var task = JsonConfig?.TryWriteAsync (static (jsonConfig, value, state) => {
+			value.IsNavigationViewExpanded = state;
+		}, NavigationView.IsPaneOpen).ContinueWithShowExceptionAsync ();
+	}
+
+	internal void NavigationView_PaneClosed (FANavigationView sender, EventArgs e) {
+		NavigationView_PaneOpened (sender, e);
 	}
 
 	protected override void OnSizeChanged (SizeChangedEventArgs e) {

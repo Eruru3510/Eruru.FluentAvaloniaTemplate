@@ -245,6 +245,7 @@ public class Config {
 		}
 
 	}
+	public virtual bool? IsNavigationViewExpanded { get; set; }
 	public virtual bool? IsMinimizeToTrayIcon { get; set; }
 	public virtual double? WindowWidth { get; set; }
 	public virtual double? WindowHeight { get; set; }

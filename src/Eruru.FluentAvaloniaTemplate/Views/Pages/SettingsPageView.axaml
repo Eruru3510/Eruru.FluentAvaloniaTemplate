@@ -342,7 +342,7 @@
 						OnContent="" />
 				</ui:FASettingsExpander.Footer>
 			</ui:FASettingsExpander>
-			<ui:FASettingsExpander Header="About" IconSource="{StaticResource InfoIcon}">
+			<ui:FASettingsExpander Header="{I18N Key={x:Static res:LangKeys.About}}" IconSource="{StaticResource InfoIcon}">
 				<ui:FASettingsExpanderItem
 					ActionIconSource="Open"
 					Click="FASettingsExpanderItem_Click"

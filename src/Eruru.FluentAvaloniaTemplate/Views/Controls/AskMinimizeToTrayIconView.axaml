@@ -1,0 +1,24 @@
+<UserControl
+	x:Class="Eruru.FluentAvaloniaTemplate.AskMinimizeToTrayIconView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="using:Eruru.FluentAvaloniaTemplate"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:res="using:Eruru.FluentAvaloniaTemplate.Resources"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:DataType="vm:AskMinimizeToTrayIconViewModel"
+	mc:Ignorable="d">
+	<UserControl.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="TextWrapping" Value="Wrap" />
+		</Style>
+	</UserControl.Styles>
+	<StackPanel Spacing="8">
+		<RadioButton Content="{I18N Key={x:Static res:LangKeys.MinimizeToTrayIcon}}" IsChecked="{Binding MinimizeToTrayIconType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:MinimizeToTrayIconType.MinimizeToTrayIcon}}" />
+		<RadioButton Content="{I18N Key={x:Static res:LangKeys.Quit}}" IsChecked="{Binding MinimizeToTrayIconType, Converter={StaticResource EnumToBoolConverter}, ConverterParameter={x:Static local:MinimizeToTrayIconType.Quit}}" />
+		<CheckBox Content="{I18N Key={x:Static res:LangKeys.DoNotAskAgain}}" IsChecked="{Binding IsDoNotAskAgain}" />
+	</StackPanel>
+</UserControl>

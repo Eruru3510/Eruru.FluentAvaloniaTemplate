@@ -61,6 +61,15 @@ namespace Eruru.FluentAvaloniaTemplate.Resources {
         }
         
         /// <summary>
+        ///   查找类似 About 的本地化字符串。
+        /// </summary>
+        internal static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Dark 的本地化字符串。
         /// </summary>
         internal static string AccentColor_Dark {
@@ -192,6 +201,15 @@ namespace Eruru.FluentAvaloniaTemplate.Resources {
         internal static string Default {
             get {
                 return ResourceManager.GetString("Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Don&apos;t ask again 的本地化字符串。
+        /// </summary>
+        internal static string DoNotAskAgain {
+            get {
+                return ResourceManager.GetString("DoNotAskAgain", resourceCulture);
             }
         }
         

@@ -1,7 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Eruru.FluentAvaloniaTemplate.Models;
+using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.FluentAvaloniaTemplate.ViewModels;
 using Eruru.JsonConfig;
 using FluentAvalonia.UI.Windowing;
@@ -15,6 +17,7 @@ public partial class MainWindowView : FAAppWindow {
 
 	readonly JsonConfig<Config, App>? JsonConfig;
 	readonly AppViewModel? AppViewModel;
+	readonly DialogService? DialogService;
 	Size WindowSize;
 
 	public MainWindowView () {
@@ -26,6 +29,7 @@ public partial class MainWindowView : FAAppWindow {
 			SplashScreen = App.ServiceProvider?.GetRequiredService<SplashScreen> ();
 			AppViewModel = App.ServiceProvider?.GetRequiredService<AppViewModel> ();
 			DataContext = App.ServiceProvider?.GetRequiredService<MainWindowViewModel> ();
+			DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
 			PropertyChanged += MainWindowView_PropertyChanged;
 			if (JsonConfig?.Read () is not Config value) {
 				return;
@@ -52,22 +56,9 @@ public partial class MainWindowView : FAAppWindow {
 	protected override void OnClosing (WindowClosingEventArgs e) {
 		ArgumentNullException.ThrowIfNull (e, nameof (e));
 		if (e.CloseReason == WindowCloseReason.WindowClosing) {
-			if (JsonConfig?.Read ()?.IsMinimizeToTrayIcon ?? true) {
-				Interlocked.Increment (ref Counter);
-				try {
-					e.Cancel = true;
-					if (OperatingSystem.IsLinux ()) {
-						WindowState = WindowState.Normal;
-					}
-					Hide ();
-					GC.Collect ();
-					AppViewModel?.IsShowTrayIcon = true;
-				} catch {
-					Interlocked.Decrement (ref Counter);
-					throw;
-				}
-				return;
-			}
+			e.Cancel = true;
+			_ = OnWindowClosingAsync ().ContinueWithShowExceptionAsync ();
+			return;
 		}
 		WindowState = WindowState.Normal;
 		Show ();
@@ -106,6 +97,53 @@ public partial class MainWindowView : FAAppWindow {
 			return;
 		}
 		WindowSize = new (Width, Height);
+	}
+
+	async Task OnWindowClosingAsync () {
+		if (DialogService == null || JsonConfig == null) {
+			await Api.ShutdownAsync ().ConfigureAwait (false);
+			return;
+		}
+		var isMinimizeToTrayIcon = JsonConfig.Read ()?.IsMinimizeToTrayIcon;
+		if (isMinimizeToTrayIcon == null) {
+			var viewModel = new AskMinimizeToTrayIconViewModel ();
+			if (!await DialogService.ShowAskAsync (new AskMinimizeToTrayIconView () {
+				DataContext = viewModel
+			}).ConfigureAwait (false)) {
+				return;
+			}
+			isMinimizeToTrayIcon = viewModel.MinimizeToTrayIconType switch {
+				MinimizeToTrayIconType.MinimizeToTrayIcon => true,
+				MinimizeToTrayIconType.Quit => false,
+				_ => throw new NotImplementedException ($"{viewModel.MinimizeToTrayIconType}"),
+			};
+			if (viewModel.IsDoNotAskAgain) {
+				await JsonConfig.TryWriteAsync (static (_, value, state) => {
+					value.IsMinimizeToTrayIcon = state;
+				}, isMinimizeToTrayIcon).ConfigureAwait (false);
+			}
+		}
+		if (isMinimizeToTrayIcon.Value) {
+			Dispatcher.UIThread.Post (static state => {
+				if (state is not MainWindowView mainWindowView) {
+					return;
+				}
+				Interlocked.Increment (ref mainWindowView.Counter);
+				try {
+					if (OperatingSystem.IsLinux ()) {
+						mainWindowView.WindowState = WindowState.Normal;
+					}
+					mainWindowView.Hide ();
+					GC.Collect ();
+					mainWindowView.AppViewModel?.IsShowTrayIcon = true;
+				} catch {
+					Interlocked.Decrement (ref mainWindowView.Counter);
+					throw;
+				}
+			}, this);
+			return;
+		}
+		await Api.ShutdownAsync ().ConfigureAwait (false);
 	}
 
 }

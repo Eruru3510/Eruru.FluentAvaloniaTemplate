@@ -131,10 +131,7 @@ public partial class App : Application {
 	}
 
 	void NativeMenuItemQuit_Click (object? sender, EventArgs e) {
-		if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) {
-			return;
-		}
-		desktop.Shutdown ();
+		_ = Api.ShutdownAsync ().ContinueWithShowExceptionAsync ();
 	}
 
 }

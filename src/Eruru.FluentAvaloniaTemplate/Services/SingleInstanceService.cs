@@ -26,7 +26,12 @@ public class SingleInstanceService (string name) : IDisposable {
 	public bool IsExists () {
 		FileStream?.Dispose ();
 		try {
-			FileStream = new (Path.Combine (Path.GetTempPath (), Name), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+			var fileInfo = new FileInfo (PathService.GetSingleInstanceLockPath (Name));
+			fileInfo.Directory?.Create ();
+			FileStream = new (
+				fileInfo.FullName,
+				FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None
+			);
 			_ = BeginServerAsync ().ContinueWithShowExceptionAsync ();
 			return false;
 		} catch (IOException) {

@@ -121,6 +121,7 @@ public partial class MainWindowView : FAAppWindow {
 				await JsonConfig.TryWriteAsync (static (_, value, state) => {
 					value.IsMinimizeToTrayIcon = state;
 				}, isMinimizeToTrayIcon).ConfigureAwait (false);
+				await JsonConfig.TrySaveAsync ().ConfigureAwait (false);
 			}
 		}
 		if (isMinimizeToTrayIcon.Value) {

@@ -6,6 +6,7 @@ namespace Eruru.FluentAvaloniaTemplate;
 
 public static class Api {
 
+	public static string AppId { get; } = nameof (FluentAvaloniaTemplate);
 	public static Collection<KeyValuePair<string, string>> AppLanguages { get; } = [
 		new ("English (United States)", "en-US"),
 		new ("中文 (简体)", "zh-CN")

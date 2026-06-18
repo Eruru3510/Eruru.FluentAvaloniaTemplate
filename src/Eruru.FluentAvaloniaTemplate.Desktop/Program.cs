@@ -11,7 +11,7 @@ internal sealed class Program {
 	// yet and stuff might break.
 	[STAThread]
 	public static void Main (string[] args) {
-		using var singleInstanceService = new SingleInstanceService ($"{nameof (Eruru)}.{nameof (FluentAvaloniaTemplate)}");
+		using var singleInstanceService = new SingleInstanceService ($"{nameof (Eruru)}.{Api.AppId}");
 		singleInstanceService.OnReceivedAsync += App.SingleInstanceServiceOnReceivedAsync;
 		if (singleInstanceService.IsExists ()) {
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits

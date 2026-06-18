@@ -48,8 +48,6 @@ public static class ExtensionMethods {
 	public static void AddJsonConfig (
 		this ServiceCollection serviceCollection, IJsonConfigSource? jsonConfigSource = null
 	) {
-		var fileInfo = new FileInfo (PathService.ConfigPath);
-		fileInfo.Directory?.Create ();
 		var jsonSerializerOptions = new JsonSerializerOptions (JsonConfig.JsonConfig.JsonSerializerOptions);
 		if (OperatingSystem.IsBrowser ()) {
 			jsonSerializerOptions.WriteIndented = false;
@@ -57,15 +55,17 @@ public static class ExtensionMethods {
 		jsonSerializerOptions.Converters.Add (new ColorJsonConverter ());
 		var jsonConfigContext = new JsonConfigContext (jsonSerializerOptions);
 		serviceCollection.AddSingleton (jsonConfigContext);
-#pragma warning disable CA2000 // 丢失范围之前释放对象
-		var jsonConfig = new JsonConfig<Config, App> ()
-			.ConfigureSource (
-				jsonConfigSource ??= new JsonConfigFileSource (fileInfo.FullName, !OperatingSystem.IsIOS ()),
-#pragma warning restore CA2000 // 丢失范围之前释放对象
-				onSaved: JsonConfig_OnSaved
-			)
-			.ConfigureValue (static _ => new Config (), jsonConfigContext.Config);
-		serviceCollection.AddSingleton (jsonConfig);
+		serviceCollection.AddSingleton (provider => {
+			var fileInfo = new FileInfo (provider.GetRequiredService<PathService> ().GetConfigPath ());
+			fileInfo.Directory?.Create ();
+			var jsonConfig = new JsonConfig<Config, App> ()
+				.ConfigureSource (
+					jsonConfigSource ??= new JsonConfigFileSource (fileInfo.FullName, !OperatingSystem.IsIOS ()),
+					onSaved: JsonConfig_OnSaved
+				)
+				.ConfigureValue (static _ => new Config (), jsonConfigContext.Config);
+			return jsonConfig;
+		});
 	}
 
 	static void JsonConfig_OnSaved (object? sender) {

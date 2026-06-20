@@ -63,7 +63,10 @@ public static class ExtensionMethods {
 					jsonConfigSource ??= new JsonConfigFileSource (fileInfo.FullName),
 					onSaved: JsonConfig_OnSaved
 				)
-				.ConfigureValue (static _ => new Config (), jsonConfigContext.Config);
+				.ConfigureValue (
+					static _ => new Config (),
+					App.ServiceProvider!.GetRequiredService<JsonConfigContext> ().Config
+				);
 			return jsonConfig;
 		});
 	}

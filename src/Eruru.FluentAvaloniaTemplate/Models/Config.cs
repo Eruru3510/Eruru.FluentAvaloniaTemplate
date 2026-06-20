@@ -17,7 +17,7 @@ public class Config {
 		new (I18NExtension.Translate (LangKeys.Default) ?? LangKeys.Default, string.Empty), ..Api.AppLanguages
 	];
 	public static Collection<KeyValuePair<string, string>> AppFonts { get; } = [.. FontManager.Current.SystemFonts
-		.Where (x => {
+		.Where (static x => {
 			if (string.IsNullOrWhiteSpace (x.Name) || x.Name.Length > 128 || x.Name.Any (char.IsControl)){
 				return false;
 			}
@@ -26,7 +26,7 @@ public class Config {
 				_ => true
 			};
 		})
-		.Select (x => KeyValuePair.Create (x.Name, x.Name))
+		.Select (static x => KeyValuePair.Create (x.Name, x.Name))
 		.Prepend (new (I18NExtension.Translate (LangKeys.Default) ?? LangKeys.Default, string.Empty))];
 	public static Collection<KeyValuePair<string, string>> AppThemes { get; } = [
 		new (LangKeys.System, string.Empty),
@@ -108,7 +108,7 @@ public class Config {
 				isDefault = true;
 			}
 			var language = FindLanguage (
-				[.. AppLanguages.Skip (1).Select (x => new CultureInfo ($"{x.Value}"))], new CultureInfo (value),
+				[.. AppLanguages.Skip (1).Select (static x => new CultureInfo ($"{x.Value}"))], new CultureInfo (value),
 				new CultureInfo ("en-US")
 			);
 			field = isDefault ? string.Empty : language.Name;
@@ -137,7 +137,7 @@ public class Config {
 				isDefault = true;
 			} else {
 				font = new FontFamily (value);
-				if (!AppFonts.Skip (1).Select (x => new FontFamily ($"{x.Value}")).Contains (font)) {
+				if (!AppFonts.Skip (1).Select (static x => new FontFamily ($"{x.Value}")).Contains (font)) {
 					font = FontManager.Current.DefaultFontFamily;
 					isDefault = true;
 				}

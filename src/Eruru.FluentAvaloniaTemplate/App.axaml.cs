@@ -82,7 +82,7 @@ public partial class App : Application {
 				break;
 			}
 			case IActivityApplicationLifetime singleViewFactoryApplicationLifetime: {
-				singleViewFactoryApplicationLifetime.MainViewFactory = () => serviceProvider.GetRequiredService<MainView> ();
+				singleViewFactoryApplicationLifetime.MainViewFactory = static () => ServiceProvider!.GetRequiredService<MainView> ();
 				break;
 			}
 			case ISingleViewApplicationLifetime singleViewPlatform: {

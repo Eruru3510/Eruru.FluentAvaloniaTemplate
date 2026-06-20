@@ -13,10 +13,9 @@ public static class Api {
 	];
 
 	public static async Task ShutdownAsync () {
-		if (App.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) {
-			return;
-		}
-		await Dispatcher.UIThread.InvokeAsync (() => desktop.Shutdown ());
+		await Dispatcher.UIThread.InvokeAsync (
+			static () => (App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown ()
+		);
 	}
 
 }

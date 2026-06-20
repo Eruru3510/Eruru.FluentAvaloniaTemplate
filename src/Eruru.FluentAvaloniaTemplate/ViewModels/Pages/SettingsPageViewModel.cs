@@ -10,6 +10,7 @@ using Eruru.FluentAvaloniaTemplate.Resources;
 using Eruru.FluentAvaloniaTemplate.Services;
 using Eruru.JsonConfig;
 using FluentAvalonia.UI.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Eruru.FluentAvaloniaTemplate.ViewModels;
 
@@ -64,13 +65,14 @@ public partial class SettingsPageViewModel : ViewModelBase, IDisposable {
 			});
 			CurrentFluentAvaloniaVersion = typeof (FANavigationView).Assembly.GetName ().Version?.ToString ();
 			CurrentAvaloniaVersion = typeof (Application).Assembly.GetName ().Version?.ToString ();
-			AppLanguages = new (Config.AppLanguages.Select (x => new KeyValueViewModel (x.Key, x.Value)));
-			AppFonts = new (Config.AppFonts.Select (x => new KeyValueViewModel (x.Key, x.Value)));
-			AppThemes = new (Config.AppThemes.Select (x => new KeyValueViewModel (x.Key, x.Value)));
-			AppFlowDirections = new (Config.AppFlowDirections.Select (x => new KeyValueViewModel (x.Key, x.Value)));
+			AppLanguages = new (Config.AppLanguages.Select (static x => new KeyValueViewModel (x.Key, x.Value)));
+			AppFonts = new (Config.AppFonts.Select (static x => new KeyValueViewModel (x.Key, x.Value)));
+			AppThemes = new (Config.AppThemes.Select (static x => new KeyValueViewModel (x.Key, x.Value)));
+			AppFlowDirections = new (Config.AppFlowDirections.Select (static x => new KeyValueViewModel (x.Key, x.Value)));
 			PredefinedAccentColors = new (Config.PredefinedAccentColors);
 			JsonConfigOnChanged ();
-			JsonConfig.OnChanged += (sender, e) => JsonConfigOnChanged ();
+			JsonConfig.OnChanged += static (sender, e)
+				=> App.ServiceProvider?.GetRequiredService<SettingsPageViewModel> ().JsonConfigOnChanged ();
 			Dispatcher.UIThread.Post (static state => {
 				if (state is not SettingsPageViewModel settingsPageViewModel) {
 					return;

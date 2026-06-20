@@ -92,6 +92,7 @@ public class Config {
 	public static CultureInfo DefaultCultureInfo { get; } = CultureInfo.CurrentUICulture;
 	public static FlowDirection DefaultFlowDirection { get; } = App.Current?.ApplicationLifetime switch {
 		IClassicDesktopStyleApplicationLifetime desktop => desktop.MainWindow?.FlowDirection,
+		IActivityApplicationLifetime activity => activity.MainViewFactory?.Invoke ()?.FlowDirection,
 		ISingleViewApplicationLifetime view => view.MainView?.FlowDirection,
 		_ => null
 	} ?? FlowDirection.LeftToRight;
@@ -201,6 +202,10 @@ public class Config {
 				switch (App.Current.ApplicationLifetime) {
 					case IClassicDesktopStyleApplicationLifetime desktop: {
 						desktop.MainWindow?.FlowDirection = flowDirection;
+						break;
+					}
+					case IActivityApplicationLifetime activity: {
+						activity.MainViewFactory?.Invoke ().FlowDirection = flowDirection;
 						break;
 					}
 					case ISingleViewApplicationLifetime view: {

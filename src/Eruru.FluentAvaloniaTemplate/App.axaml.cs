@@ -55,7 +55,12 @@ public partial class App : Application {
 
 	public override void Initialize () {
 		AvaloniaXamlLoader.Load (this);
-		if (ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> () is not JsonConfig<Config, App> jsonConfig) {
+	}
+
+	public override void OnFrameworkInitializationCompleted () {
+		if (ServiceProvider is not ServiceProvider serviceProvider
+			|| ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> () is not JsonConfig<Config, App> jsonConfig
+		) {
 			return;
 		}
 		if (OperatingSystem.IsBrowser ()) {
@@ -63,20 +68,12 @@ public partial class App : Application {
 			static async Task Async (JsonConfig<Config, App> jsonConfig) {
 				await jsonConfig.BuildAsync ().ConfigureAwait (true);
 				Current = Application.Current as App;
-				jsonConfig.Read ()?.Apply ();
 			}
 		} else {
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
 			jsonConfig.BuildAsync ().GetAwaiter ().GetResult ();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 			Current = this;
-			jsonConfig.Read ()?.Apply ();
-		}
-	}
-
-	public override void OnFrameworkInitializationCompleted () {
-		if (ServiceProvider is not ServiceProvider serviceProvider) {
-			return;
 		}
 		DataContext = serviceProvider.GetRequiredService<AppViewModel> ();
 		switch (ApplicationLifetime) {
@@ -93,6 +90,7 @@ public partial class App : Application {
 				break;
 			}
 		}
+		jsonConfig.Read ()?.Apply ();
 		base.OnFrameworkInitializationCompleted ();
 	}
 

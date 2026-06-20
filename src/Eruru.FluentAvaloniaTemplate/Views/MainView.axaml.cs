@@ -20,33 +20,43 @@ public partial class MainView : UserControl {
 	int IsPaneOpenCounter;
 
 	public MainView () {
-		InitializeComponent ();
-		JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
-		DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
-		var navigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationService> ();
-		navigationPageFactory?.Frame = Frame;
-		Frame.NavigationPageFactory = navigationPageFactory;
-		var viewModel = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
-		DataContext = viewModel;
-		if (viewModel?.Page == null) {
-			return;
+		Interlocked.Increment (ref IsPaneOpenCounter);
+		try {
+			InitializeComponent ();
+			JsonConfig = App.ServiceProvider?.GetRequiredService<JsonConfig<Config, App>> ();
+			DialogService = App.ServiceProvider?.GetRequiredService<DialogService> ();
+			var navigationPageFactory = App.ServiceProvider?.GetRequiredService<NavigationService> ();
+			navigationPageFactory?.Frame = Frame;
+			Frame.NavigationPageFactory = navigationPageFactory;
+			var viewModel = App.ServiceProvider?.GetRequiredService<MainViewModel> ();
+			DataContext = viewModel;
+			if (viewModel?.Page == null) {
+				return;
+			}
+			Frame.Navigate (viewModel.Page.ViewType, viewModel.Page);
+		} catch {
+			Interlocked.Decrement (ref IsPaneOpenCounter);
+			throw;
 		}
-		Frame.Navigate (viewModel.Page.ViewType, viewModel.Page);
 	}
 
 	protected override void OnLoaded (RoutedEventArgs e) {
-		base.OnLoaded (e);
-		if (TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
-			return;
+		try {
+			base.OnLoaded (e);
+			if (TopLevel.GetTopLevel (this) is not TopLevel topLevel) {
+				return;
+			}
+			if (DialogService != null) {
+				DialogService.StorageProvider = topLevel.StorageProvider;
+				DialogService.Launcher = topLevel.Launcher;
+			}
+			if (!OperatingSystem.IsAndroid ()) {
+				return;
+			}
+			topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
+		} finally {
+			Interlocked.Decrement (ref IsPaneOpenCounter);
 		}
-		if (DialogService != null) {
-			DialogService.StorageProvider = topLevel.StorageProvider;
-			DialogService.Launcher = topLevel.Launcher;
-		}
-		if (!OperatingSystem.IsAndroid ()) {
-			return;
-		}
-		topLevel.InsetsManager?.DisplayEdgeToEdgePreference = true;
 	}
 
 	protected override void OnSizeChanged (SizeChangedEventArgs e) {

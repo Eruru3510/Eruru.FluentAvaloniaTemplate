@@ -40,9 +40,9 @@ public class DialogService {
 	}
 
 	public Task<FAContentDialogResult> WaitDialogAsync (
-			FAContentDialog contentDialog, Func<FAContentDialog, object?, CancellationToken, Task<bool>> callbackAsync,
-			object? state = null
-		) {
+		FAContentDialog contentDialog, Func<FAContentDialog, object?, CancellationToken, Task<bool>> callbackAsync,
+		object? state = null
+	) {
 		return Dispatcher.UIThread.InvokeAsync (async () => {
 			FormatContentDialog (contentDialog);
 			using var cancellationTokenSource = new CancellationTokenSource ();

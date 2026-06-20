@@ -59,15 +59,12 @@ public partial class App : Application {
 			return;
 		}
 		if (OperatingSystem.IsBrowser ()) {
-			var task = jsonConfig.BuildAsync ();
-			_ = task.ContinueWithShowExceptionAsync ();
-			_ = task.ContinueWith (static (task, state) => {
+			_ = Async (jsonConfig).ContinueWithShowExceptionAsync ();
+			static async Task Async (JsonConfig<Config, App> jsonConfig) {
+				await jsonConfig.BuildAsync ().ConfigureAwait (true);
 				Current = Application.Current as App;
-				if (state is not JsonConfig<Config, App> jsonConfig) {
-					return;
-				}
 				jsonConfig.Read ()?.Apply ();
-			}, jsonConfig, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
+			}
 		} else {
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
 			jsonConfig.BuildAsync ().GetAwaiter ().GetResult ();

@@ -18,14 +18,14 @@ public class DialogService {
 	public Task<FAContentDialogResult> ShowDialogAsync (FAContentDialog contentDialog) {
 		return Dispatcher.UIThread.InvokeAsync (async () => {
 			FormatContentDialog (contentDialog);
-			return await contentDialog.ShowAsync ().ConfigureAwait (false);
+			return await contentDialog.ShowAsync ().ConfigureAwait (true);
 		});
 	}
 
 	public async Task<bool> ShowMessageAsync (object content, object? title = null) {
 		return await Dispatcher.UIThread.InvokeAsync (async () => await ShowDialogAsync (new () {
 			Title = title, Content = content, PrimaryButtonText = I18NExtension.Translate (LangKeys.Ok)
-		}).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
+		}).ConfigureAwait (true)).ConfigureAwait (true) == FAContentDialogResult.Primary;
 	}
 
 	public Task<bool> ShowExceptionAsync (Exception exception, object? title = null) {
@@ -36,7 +36,7 @@ public class DialogService {
 		return await Dispatcher.UIThread.InvokeAsync (async () => await ShowDialogAsync (new () {
 			Title = title, Content = content, PrimaryButtonText = I18NExtension.Translate (LangKeys.Ok),
 			SecondaryButtonText = I18NExtension.Translate (LangKeys.Cancel)
-		}).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
+		}).ConfigureAwait (true)).ConfigureAwait (true) == FAContentDialogResult.Primary;
 	}
 
 	public Task<FAContentDialogResult> WaitDialogAsync (
@@ -51,7 +51,7 @@ public class DialogService {
 			contentDialog.Opened += ContentDialog_Opened;
 			contentDialog.Closing += ContentDialog_Closing;
 			try {
-				await contentDialog.ShowAsync ().ConfigureAwait (false);
+				await contentDialog.ShowAsync ().ConfigureAwait (true);
 				waitDialogContext.ExceptionDispatchInfo?.Throw ();
 				return waitDialogContext.Result ?? FAContentDialogResult.None;
 			} finally {
@@ -66,51 +66,42 @@ public class DialogService {
 	) {
 		return await Dispatcher.UIThread.InvokeAsync (async () => await WaitDialogAsync (new () {
 			Title = title, Content = content, SecondaryButtonText = I18NExtension.Translate (LangKeys.Cancel)
-		}, callbackAsync, state).ConfigureAwait (false)).ConfigureAwait (false) == FAContentDialogResult.Primary;
+		}, callbackAsync, state).ConfigureAwait (true)).ConfigureAwait (true) == FAContentDialogResult.Primary;
 	}
 
 	static void ContentDialog_Opened (FAContentDialog contentDialog, EventArgs e) {
-		if (contentDialog.Tag is not WaitDialogContext waitDialogContext) {
-			return;
-		}
-		try {
-			_ = waitDialogContext.CallbackAsync (
-				contentDialog, waitDialogContext.State, waitDialogContext.CancellationTokenSource.Token
-			).ContinueWith (
-				static (task, state) => {
-					if (state is not WaitDialogContext waitDialogContext) {
-						return;
-					}
-					if (task.Exception != null) {
-						waitDialogContext.ExceptionDispatchInfo = ExceptionDispatchInfo.Capture (task.Exception);
-					}
-					var result = task.IsCompletedSuccessfully && task.Result ? FAContentDialogResult.Primary : FAContentDialogResult.None;
-					Dispatcher.UIThread.Invoke (() => waitDialogContext.ContentDialog.Hide (result));
-				},
-				waitDialogContext, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default
-			);
+		_ = Async (contentDialog).ContinueWithShowExceptionAsync ();
+		static async Task Async (FAContentDialog contentDialog) {
+			if (contentDialog.Tag is not WaitDialogContext waitDialogContext) {
+				return;
+			}
+			try {
+				waitDialogContext.ContentDialog.Hide (await waitDialogContext.CallbackAsync (
+					contentDialog, waitDialogContext.State, waitDialogContext.CancellationTokenSource.Token
+				).ConfigureAwait (true) ? FAContentDialogResult.Primary : FAContentDialogResult.None);
 #pragma warning disable CA1031 // 不捕获常规异常类型
-		} catch (Exception exception) {
+			} catch (Exception exception) {
 #pragma warning restore CA1031 // 不捕获常规异常类型
-			waitDialogContext.ExceptionDispatchInfo = ExceptionDispatchInfo.Capture (exception);
-			waitDialogContext.ContentDialog.Hide (FAContentDialogResult.None);
+				waitDialogContext.ExceptionDispatchInfo = ExceptionDispatchInfo.Capture (exception);
+				waitDialogContext.ContentDialog.Hide (FAContentDialogResult.None);
+			}
 		}
 	}
 
 	static void ContentDialog_Closing (FAContentDialog contentDialog, FAContentDialogClosingEventArgs e) {
-		e.Cancel = Dispatcher.UIThread.Invoke (() => {
-			if (contentDialog.Tag is not WaitDialogContext waitDialogContext) {
-				return true;
-			}
-			_ = waitDialogContext.CancellationTokenSource.CancelAsync ().ContinueWithShowExceptionAsync ();
-			switch (e.Result) {
-				case FAContentDialogResult.Primary:
-				case FAContentDialogResult.None:
-					waitDialogContext.Result ??= e.Result;
-					return false;
-			}
-			return true;
-		});
+		if (contentDialog.Tag is not WaitDialogContext waitDialogContext) {
+			return;
+		}
+		switch (e.Result) {
+			case FAContentDialogResult.Primary:
+			case FAContentDialogResult.None:
+				waitDialogContext.Result ??= e.Result;
+				break;
+			default:
+				e.Cancel = true;
+				break;
+		}
+		_ = waitDialogContext.CancellationTokenSource.CancelAsync ().ContinueWithShowExceptionAsync ();
 	}
 
 	void FormatContentDialog (FAContentDialog contentDialog) {

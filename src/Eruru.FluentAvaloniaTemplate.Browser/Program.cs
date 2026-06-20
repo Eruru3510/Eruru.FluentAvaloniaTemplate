@@ -6,12 +6,12 @@ using Eruru.FluentAvaloniaTemplate.Browser;
 internal sealed partial class Program {
 
 	private static async Task Main (string[] args) {
-		await JsInterop.LoadSatelliteAssembliesAsync ([.. Api.AppLanguages.Select (x => x.Value)]).ConfigureAwait (false);
+		await JsInterop.LoadSatelliteAssembliesAsync ([.. Api.AppLanguages.Select (x => x.Value)]).ConfigureAwait (true);
 		await BuildAvaloniaApp ()
 #if DEBUG
 			.WithDeveloperTools ()
 #endif
-			.StartBrowserAppAsync ("out").ConfigureAwait (false);
+			.StartBrowserAppAsync ("out").ConfigureAwait (true);
 	}
 
 	public static AppBuilder BuildAvaloniaApp () {

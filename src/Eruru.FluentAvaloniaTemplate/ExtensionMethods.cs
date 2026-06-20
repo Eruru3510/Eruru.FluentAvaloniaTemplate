@@ -60,7 +60,7 @@ public static class ExtensionMethods {
 			fileInfo.Directory?.Create ();
 			var jsonConfig = new JsonConfig<Config, App> ()
 				.ConfigureSource (
-					jsonConfigSource ??= new JsonConfigFileSource (fileInfo.FullName, !OperatingSystem.IsIOS ()),
+					jsonConfigSource ??= new JsonConfigFileSource (fileInfo.FullName),
 					onSaved: JsonConfig_OnSaved
 				)
 				.ConfigureValue (static _ => new Config (), jsonConfigContext.Config);

@@ -10,13 +10,11 @@ internal sealed class Program {
 	// SynchronizationContext-reliant code before AppMain is called: things aren't initialized
 	// yet and stuff might break.
 	[STAThread]
-	public static void Main (string[] args) {
+	public static async Task Main (string[] args) {
 		using var singleInstanceService = new SingleInstanceService ($"{nameof (Eruru)}.{Api.AppId}");
 		singleInstanceService.OnReceivedAsync += App.SingleInstanceServiceOnReceivedAsync;
 		if (singleInstanceService.IsExists ()) {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-			singleInstanceService.SendAsync (LangKeys.Show).GetAwaiter ().GetResult ();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+			await singleInstanceService.SendAsync (LangKeys.Show).ConfigureAwait (true);
 			return;
 		}
 		BuildAvaloniaApp ()

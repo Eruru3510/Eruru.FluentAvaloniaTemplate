@@ -345,7 +345,8 @@
 			<ui:FASettingsExpander Header="{I18N Key={x:Static res:LangKeys.About}}" IconSource="{StaticResource InfoIcon}">
 				<ui:FASettingsExpanderItem
 					ActionIconSource="Open"
-					Click="FASettingsExpanderItem_Click"
+					Command="{Binding OpenUriCommand}"
+					CommandParameter="{Binding Source=https://github.com/amwx/FluentAvalonia, Converter={StaticResource StringToUriConverter}}"
 					Content="Found a bug? Want a new feature, control, or sample?"
 					IsClickEnabled="True" />
 				<ui:FASettingsExpanderItem Content="Clone FluentAvalonia repository">

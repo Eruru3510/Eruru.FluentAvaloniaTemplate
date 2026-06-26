@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Eruru.Debouncer;
 using Eruru.FluentAvaloniaTemplate.Models;
 using Eruru.FluentAvaloniaTemplate.Resources;
@@ -95,6 +96,14 @@ public partial class SettingsPageViewModel : ViewModelBase, IDisposable {
 	public void Dispose () {
 		Dispose (true);
 		GC.SuppressFinalize (this);
+	}
+
+	[RelayCommand]
+	public Task OpenUriAsync (Uri uri) {
+		if (DialogService.Launcher == null) {
+			return Task.CompletedTask;
+		}
+		return DialogService.Launcher.LaunchUriAsync (uri);
 	}
 
 	void JsonConfigOnChanged () {

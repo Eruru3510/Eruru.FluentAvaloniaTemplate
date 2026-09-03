@@ -120,7 +120,7 @@ public partial class SettingsPageViewModel : ViewModelBase, IDisposable {
 			IsUseCustomAccentColor = value.IsUseCustomAccentColor ?? false;
 			PredefinedAccentColor = value.PredefinedAccentColor ?? Config.FallbackAccentColor;
 			CustomAccentColor = value.CustomAccentColor ?? Config.FallbackAccentColor;
-			IsMinimizeToTrayIcon = value.IsMinimizeToTrayIcon ?? true;
+			IsMinimizeToTrayIcon = value.IsMinimizeToTrayIcon ?? false;
 			AppFonts[0].Key = I18NExtension.Translate (LangKeys.Default) ?? LangKeys.Default;
 		} finally {
 			Interlocked.Decrement (ref Counter);

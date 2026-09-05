@@ -10,16 +10,14 @@
 	d:DesignWidth="800"
 	x:DataType="vm:MainViewModel"
 	mc:Ignorable="d">
-	<Grid
-		Margin="0,5,0,5"
-		Background="{DynamicResource NormalBlackUpDark}"
-		RowDefinitions="Auto,*">
+	<Grid Margin="0,5,0,5" RowDefinitions="Auto,*">
 		<Grid
 			Height="30"
-			Background="{DynamicResource NormalBlackUpDark}"
+			Background="Transparent"
 			ColumnDefinitions="Auto,Auto,*,Auto"
 			IsVisible="{OnPlatform False,
-			                       Windows=True}">
+			                       Windows=True}"
+			WindowDecorationProperties.ElementRole="TitleBar">
 			<Image
 				Width="18"
 				Height="18"

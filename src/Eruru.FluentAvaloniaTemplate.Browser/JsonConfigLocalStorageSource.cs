@@ -27,7 +27,9 @@ internal sealed class JsonConfigLocalStorageSource (string name) : IJsonConfigSo
 		}
 		MemoryStream.Position = 0;
 		MemoryStream.SetLength (0);
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
 		MemoryStream.Write (Encoding.UTF8.GetBytes (value));
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
 		MemoryStream.Position = 0;
 		return Task.FromResult<Stream?> (MemoryStream);
 	}

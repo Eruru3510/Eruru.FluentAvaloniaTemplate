@@ -6,22 +6,28 @@
 	<ItemGroup>
 		<!-- Avalonia packages -->
 		<!-- Important: keep version in sync! -->
-		<PackageVersion Include="Avalonia" Version="12.1.4" />
+		<PackageVersion Include="Avalonia" Version="12.1.6" />
+		<PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+		<PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.2" />
+		<PackageVersion Include="Avalonia.Desktop" Version="12.1.6" />
+		<PackageVersion Include="Avalonia.iOS" Version="12.1.6" />
+		<PackageVersion Include="Avalonia.Browser" Version="12.1.6" />
+		<PackageVersion Include="Avalonia.Android" Version="12.1.6" />
 		<PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
-		<PackageVersion Include="Avalonia.Desktop" Version="12.1.4" />
-		<PackageVersion Include="Avalonia.iOS" Version="12.1.4" />
-		<PackageVersion Include="Avalonia.Browser" Version="12.1.4" />
-		<PackageVersion Include="Avalonia.Android" Version="12.1.4" />
-		<PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.4" />
 		<PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.2.0.2" />
-		<PackageVersion Include="AsyncFixer" Version="2.1.0" />
 		<PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1" />
-		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
+		<PackageVersion Include="AsyncFixer" Version="2.1.0" />
 		<PackageVersion Include="FluentAvaloniaUI" Version="3.1.0" />
 		<PackageVersion Include="HotAvalonia" Version="3.1.5" />
+		<PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.6" />
 		<PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-2" />
-		<PackageVersion Include="Eruru.JsonConfig" Version="1.0.9" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
+		<PackageVersion Include="Riok.Mapperly" Version="4.3.1" />
 		<PackageVersion Include="Quick.AvaloniaFonts.SourceHanSansCN.Slim" Version="1.0.0" />
+		<PackageVersion Include="Consolonia" Version="12.1.4.17" />
+		<PackageVersion Include="Consolonia.Controls" Version="12.1.4.14-alpha.2913" />
+		<PackageVersion Include="Consolonia.ManagedWindows" Version="12.1.4.17" />
+		<PackageVersion Include="PublishAotCross" Version="1.0.0" />
 	</ItemGroup>
 </Project>

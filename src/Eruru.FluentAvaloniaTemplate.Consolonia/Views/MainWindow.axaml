@@ -1,0 +1,13 @@
+<Window
+	x:Class="Eruru.FluentAvaloniaTemplate.Consolonia.Views.MainWindow"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:i18n="using:Presentation.Localization"
+	xmlns:managedWindows="using:Consolonia.ManagedWindows"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.Consolonia.ViewModels"
+	Title="{I18N Key={x:Static i18n:LangKeys.AppName}}"
+	x:DataType="vm:MainWindowViewModel">
+	<Window.Styles>
+		<managedWindows:AutoManagedWindowStyles />
+	</Window.Styles>
+</Window>

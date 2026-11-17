@@ -6,6 +6,8 @@
     <File Path="Directory.Packages.props" />
     <File Path="README.md" />
   </Folder>
+  <Project Path="src/Eruru.FluentAvaloniaTemplate.Consolonia/Eruru.FluentAvaloniaTemplate.Consolonia.csproj" Id="fa38dcb8-74dc-4279-bc82-3e06a8224172" />
+  <Project Path="src/Presentation/Presentation.csproj" Id="a5024b24-9c8b-49ba-ab09-db060fa9005c" />
   <Project Path="src/Eruru.FluentAvaloniaTemplate.Android/Eruru.FluentAvaloniaTemplate.Android.csproj">
     <Deploy />
   </Project>

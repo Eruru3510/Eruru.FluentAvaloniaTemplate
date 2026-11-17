@@ -1,0 +1,25 @@
+<UserControl
+	x:Class="Eruru.FluentAvaloniaTemplate.Consolonia.Views.HomeView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.Consolonia.ViewModels"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:DataType="vm:HomeViewModel"
+	mc:Ignorable="d">
+	<Border BorderBrush="{DynamicResource ThemeBorderBrush}" BorderThickness="1">
+		<Grid RowDefinitions="Auto,*">
+			<TextBlock Text="{Binding DialogResult, StringFormat=Dialog Result: {0}}" />
+			<ScrollViewer Grid.Row="1" Margin="0,1,0,0">
+				<WrapPanel ItemSpacing="1" LineSpacing="1">
+					<Button Command="{Binding MessageBoxCommand}" Content="MessageBox" />
+					<Button Command="{Binding ExceptionBoxCommand}" Content="ExceptionBox" />
+					<Button Command="{Binding OkCancelBoxCommand}" Content="OkCancelBox" />
+					<Button Command="{Binding WaitTaskBoxCommand}" Content="WaitTaskBox" />
+				</WrapPanel>
+			</ScrollViewer>
+		</Grid>
+	</Border>
+</UserControl>

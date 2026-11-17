@@ -11,7 +11,7 @@
 		<EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
 		<EnableAotAnalyzer>true</EnableAotAnalyzer>
 
-		<NoWarn>$(NoWarn);IDE0130;CA1515;CA1724</NoWarn>
+		<NoWarn>IDE0130;CA1515;CA1724;CA1822</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -41,6 +41,16 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<Target Name="Include Project Satellite Assemblies In Native Compile" AfterTargets="_ComputeIlcCompileInputs">
+		<ItemGroup>
+			<IlcSatelliteAssembly Include="@(ReferenceSatellitePaths)" Exclude="@(IlcSatelliteAssembly)"/>
+		</ItemGroup>
+	</Target>
+
+	<ItemGroup Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-'))">
+		<PackageReference Include="PublishAotCross" />
 	</ItemGroup>
 
 </Project>

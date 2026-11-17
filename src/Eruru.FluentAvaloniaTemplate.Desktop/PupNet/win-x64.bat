@@ -1,0 +1,1 @@
+pupnet -k setup -r win-x64

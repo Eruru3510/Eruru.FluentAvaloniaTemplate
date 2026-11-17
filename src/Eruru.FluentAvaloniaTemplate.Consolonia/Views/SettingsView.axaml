@@ -1,0 +1,133 @@
+<UserControl
+	x:Class="Eruru.FluentAvaloniaTemplate.Consolonia.Views.SettingsView"
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:i18n="using:Presentation.Localization"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.Consolonia.ViewModels"
+	d:DesignHeight="450"
+	d:DesignWidth="800"
+	x:DataType="vm:SettingsViewModel"
+	mc:Ignorable="d">
+	<UserControl.Styles>
+		<Style Selector="TextBlock.Title">
+			<Setter Property="TextWrapping" Value="Wrap" />
+		</Style>
+		<Style Selector="TextBlock.Description">
+			<Setter Property="TextWrapping" Value="Wrap" />
+		</Style>
+		<Style Selector="ComboBox.Item">
+			<Setter Property="MinWidth" Value="15" />
+		</Style>
+		<Style Selector="Border.Item">
+			<Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderBrush}" />
+			<Setter Property="BorderThickness" Value="1" />
+		</Style>
+	</UserControl.Styles>
+	<ScrollViewer>
+		<StackPanel Orientation="Vertical">
+			<Border Classes="Item">
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+					<TextBlock Classes="Title" Text="{I18N Key={x:Static i18n:LangKeys.AppLanguage}}" />
+					<TextBlock
+						Grid.Row="1"
+						Classes="Description"
+						Text="{I18N Key={x:Static i18n:LangKeys.ChangeCurrentAppLanguage}}" />
+					<ComboBox
+						Grid.Column="1"
+						Classes="Item"
+						ItemsSource="{Binding AppLanguages}"
+						SelectedValue="{Binding AppLanguage}"
+						SelectedValueBinding="{Binding Value}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{I18N {Binding Key}}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+			</Border>
+			<Border Classes="Item">
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+					<TextBlock Classes="Title" Text="{I18N Key={x:Static i18n:LangKeys.AppFont}}" />
+					<TextBlock
+						Grid.Row="1"
+						Classes="Description"
+						Text="{I18N Key={x:Static i18n:LangKeys.ChangeCurrentAppFont}}" />
+					<ComboBox
+						Grid.Column="1"
+						Classes="Item"
+						ItemsSource="{Binding AppFonts}"
+						SelectedValue="{Binding AppFont}"
+						SelectedValueBinding="{Binding Value}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{I18N {Binding Key}}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+			</Border>
+			<Border Classes="Item">
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+					<TextBlock Classes="Title" Text="{I18N Key={x:Static i18n:LangKeys.AppStyle}}" />
+					<TextBlock
+						Grid.Row="1"
+						Classes="Description"
+						Text="{I18N Key={x:Static i18n:LangKeys.ChangeCurrentAppStyle}}" />
+					<ComboBox
+						Grid.Column="1"
+						Classes="Item"
+						ItemsSource="{Binding AppStyles}"
+						SelectedValue="{Binding AppStyle}"
+						SelectedValueBinding="{Binding Value}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{I18N {Binding Key}}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+			</Border>
+			<Border Classes="Item">
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+					<TextBlock Classes="Title" Text="{I18N Key={x:Static i18n:LangKeys.AppTheme}}" />
+					<TextBlock
+						Grid.Row="1"
+						Classes="Description"
+						Text="{I18N Key={x:Static i18n:LangKeys.ChangeCurrentAppTheme}}" />
+					<ComboBox
+						Grid.Column="1"
+						Classes="Item"
+						ItemsSource="{Binding AppThemes}"
+						SelectedValue="{Binding AppTheme}"
+						SelectedValueBinding="{Binding Value}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{I18N {Binding Key}}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+			</Border>
+			<Border Classes="Item">
+				<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+					<TextBlock Classes="Title" Text="{I18N Key={x:Static i18n:LangKeys.StartPage}}" />
+					<ComboBox
+						Grid.Column="1"
+						Classes="Item"
+						ItemsSource="{Binding StartPages}"
+						SelectedValue="{Binding StartPage}"
+						SelectedValueBinding="{Binding Value}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{I18N {Binding Key}}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</Grid>
+			</Border>
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>

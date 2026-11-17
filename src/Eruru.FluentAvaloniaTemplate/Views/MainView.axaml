@@ -4,6 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:nav="using:Presentation.Navigations"
 	xmlns:ui="using:FluentAvalonia.UI.Controls"
 	xmlns:vm="using:Eruru.FluentAvaloniaTemplate.ViewModels"
 	d:DesignHeight="450"
@@ -12,54 +13,62 @@
 	mc:Ignorable="d">
 	<Grid RowDefinitions="Auto,*">
 		<Grid
-			Height="30"
+			Height="32"
 			Background="Transparent"
-			ColumnDefinitions="Auto,Auto,*,Auto"
+			ColumnDefinitions="Auto,*"
 			IsVisible="{OnPlatform False,
 			                       Windows=True}"
 			WindowDecorationProperties.ElementRole="TitleBar">
 			<Image
-				Width="18"
-				Height="18"
-				Margin="12,4"
-				DockPanel.Dock="Left"
-				IsHitTestVisible="False"
+				Width="16"
+				Height="16"
+				Margin="8"
 				RenderOptions.BitmapInterpolationMode="HighQuality"
 				Source="/Assets/avalonia-logo.ico" />
 			<TextBlock
 				Grid.Column="1"
 				VerticalAlignment="Center"
 				FontSize="12"
-				IsHitTestVisible="False"
 				Text="{Binding $parent[Window].Title}" />
 		</Grid>
 		<ui:FANavigationView
 			Name="NavigationView"
 			Grid.Row="1"
 			BackRequested="NavigationView_BackRequested"
-			DisplayModeChanged="NavigationView_DisplayModeChanged"
-			FooterMenuItemsSource="{Binding NavigationView.FooterItems}"
+			DisplayModeChanged="FANavigationView_DisplayModeChanged"
+			FooterMenuItemsSource="{Binding NavigationService.FooterMenuItems}"
 			IsBackButtonVisible="True"
-			IsBackEnabled="{Binding #Frame.CanGoBack}"
+			IsBackEnabled="{Binding NavigationService.CanBack}"
 			IsSettingsVisible="False"
-			ItemInvoked="NavigationView_ItemInvoked"
-			Loaded="NavigationView_Loaded"
-			MenuItemTemplate="{StaticResource NavigationViewItemTemplate}"
-			MenuItemsSource="{Binding NavigationView.Items}"
-			PaneClosed="NavigationView_PaneClosed"
-			PaneOpened="NavigationView_PaneOpened"
-			SelectedItem="{Binding Page}">
-			<ui:FANavigationView.Resources>
-				<DataTemplate x:Key="NavigationViewItemTemplate" x:DataType="vm:NavigationItemViewModel">
+			ItemInvoked="FANavigationView_ItemInvoked"
+			MenuItemsSource="{Binding NavigationService.MenuItems}"
+			SelectedItem="{Binding NavigationService.CurrentItem}">
+			<ui:FANavigationView.MenuItemTemplate>
+				<DataTemplate DataType="nav:NavigationItem">
 					<ui:FANavigationViewItem
-						Content="{I18N {Binding Content}}"
-						ContentTemplate="{StaticResource NavigationViewItemTemplate}"
+						Content="{I18N {Binding Title}}"
 						IconSource="{Binding IconSource}"
-						MenuItemsSource="{Binding Items}"
-						Tag="{Binding DataContext}" />
+						IsVisible="{Binding IsShowInMenu}"
+						MenuItemsSource="{Binding SubItems}" />
 				</DataTemplate>
-			</ui:FANavigationView.Resources>
-			<ui:FAFrame Name="Frame" Navigated="Frame_Navigated" />
+			</ui:FANavigationView.MenuItemTemplate>
+			<Grid
+				Name="PageContainer"
+				Margin="0,44,0,0"
+				RowDefinitions="Auto,*">
+				<ui:FABreadcrumbBar
+					Margin="8,0,0,0"
+					IsVisible="{Binding NavigationService.CurrentItem.IsShowBreadcrumb}"
+					ItemClicked="FABreadcrumbBar_ItemClicked"
+					ItemsSource="{Binding NavigationService.BreadcrumbItems}">
+					<ui:FABreadcrumbBar.ItemTemplate>
+						<DataTemplate DataType="nav:NavigationEntry">
+							<ui:FABreadcrumbBarItem Content="{I18N {Binding Title}}" />
+						</DataTemplate>
+					</ui:FABreadcrumbBar.ItemTemplate>
+				</ui:FABreadcrumbBar>
+				<ui:FAFrame CacheSize="0" Grid.Row="1" Content="{Binding NavigationService.CurrentView}" />
+			</Grid>
 		</ui:FANavigationView>
 	</Grid>
 </UserControl>

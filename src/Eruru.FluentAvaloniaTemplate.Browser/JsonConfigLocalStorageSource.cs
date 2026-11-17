@@ -1,61 +1,54 @@
 using System.Text;
-using Eruru.JsonConfig;
+using Presentation.Configs;
 
-namespace Eruru.FluentAvaloniaTemplate.Browser;
+namespace Eruru.FluentAvaloniaTemplate;
 
-internal sealed class JsonConfigLocalStorageSource (string name) : IJsonConfigSource {
+public class JsonConfigLocalStorageSource (string key) : IJsonConfigSource {
 
-	public event EventHandler? OnChanged;
+	public string Key { get; } = key;
 
-	readonly string Name = name;
 	readonly MemoryStream MemoryStream = new ();
-	int State;
+	int DisposeState;
 
-	public void Dispose () {
-		if (Interlocked.Exchange (ref State, 1) != 0) {
+	protected virtual void Dispose (bool disposing) {
+		if (Interlocked.Exchange (ref DisposeState, 1) != 0 || !disposing) {
 			return;
 		}
-		OnChanged?.Invoke (null, EventArgs.Empty);
-		OnChanged = null;
+	}
+	public void Dispose () {
+		Dispose (true);
 		GC.SuppressFinalize (this);
 	}
 
-	public Task<Stream?> OpenInputStreamAsync () {
-		var value = JsInterop.LocalStorageGetItem (Name);
+	~JsonConfigLocalStorageSource () {
+		Dispose (false);
+	}
+
+	public async Task<Stream?> OpenInputStreamAsync (CancellationToken cancellationToken = default) {
+		var value = JsInterop.LocalStorageGetItem (Key);
 		if (string.IsNullOrWhiteSpace (value)) {
-			return Task.FromResult<Stream?> (null);
+			return null;
 		}
 		MemoryStream.Position = 0;
 		MemoryStream.SetLength (0);
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
-		MemoryStream.Write (Encoding.UTF8.GetBytes (value));
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
+		await MemoryStream.WriteAsync (Encoding.UTF8.GetBytes (value), cancellationToken).ConfigureAwait (false);
 		MemoryStream.Position = 0;
-		return Task.FromResult<Stream?> (MemoryStream);
+		return MemoryStream;
 	}
 
-	public Task CloseInputStreamAsync (Stream? stream) {
+	public Task CloseInputStreamAsync (Stream stream, CancellationToken cancellationToken = default) {
 		return Task.CompletedTask;
 	}
 
-	public Task<Stream?> OpenOutputStreamAsync () {
+	public Task<Stream> OpenOutputStreamAsync (CancellationToken cancellationToken = default) {
 		MemoryStream.Position = 0;
 		MemoryStream.SetLength (0);
-		return Task.FromResult<Stream?> (MemoryStream);
+		return Task.FromResult<Stream> (MemoryStream);
 	}
 
-	public Task CloseOutputStreamAsync (Stream? stream) {
+	public Task CloseOutputStreamAsync (Stream stream, CancellationToken cancellationToken = default) {
 		MemoryStream.Position = 0;
-		JsInterop.LocalStorageSetItem (Name, Encoding.UTF8.GetString (MemoryStream.ToArray ()));
-		return Task.CompletedTask;
-	}
-
-	public Task BackupAsync () {
-		return Task.CompletedTask;
-	}
-
-	public Task DeleteAsync () {
-		JsInterop.LocalStorageSetItem (Name, string.Empty);
+		JsInterop.LocalStorageSetItem (Key, Encoding.UTF8.GetString (MemoryStream.ToArray ()));
 		return Task.CompletedTask;
 	}
 

@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices.JavaScript;
 
-namespace Eruru.FluentAvaloniaTemplate.Browser;
+namespace Eruru.FluentAvaloniaTemplate;
 
-internal static partial class JsInterop {
+public static partial class JsInterop {
 
 	[JSImport ("globalThis.window.localStorage.setItem")]
 	public static partial void LocalStorageSetItem (string key, string value);

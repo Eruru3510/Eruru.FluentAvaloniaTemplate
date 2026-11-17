@@ -1,29 +1,31 @@
 using Avalonia;
 using Avalonia.Browser;
 using Eruru.FluentAvaloniaTemplate;
-using Eruru.FluentAvaloniaTemplate.Browser;
+using Microsoft.Extensions.DependencyInjection;
+using Presentation;
+using Presentation.Configs;
 
 internal sealed partial class Program {
 
-	private static async Task Main (string[] args) {
-		await JsInterop.LoadSatelliteAssembliesAsync ([.. Api.AppLanguages.Select (static x => x.Value)]).ConfigureAwait (true);
+	private static async Task Main () {
+		await JsInterop.LoadSatelliteAssembliesAsync (
+			[.. PresentationApi.AppLanguages.Select (static x => x.Value)]
+		).ConfigureAwait (true);
 		await BuildAvaloniaApp ()
-#if DEBUG
-			.WithDeveloperTools ()
-#endif
 			.StartBrowserAppAsync ("out").ConfigureAwait (true);
 	}
 
 	public static AppBuilder BuildAvaloniaApp () {
 		return AppBuilder.Configure<App> ()
 			.WithFont_SourceHanSansCN ()
-			.AfterPlatformServicesSetup (static appBuilder => {
-				appBuilder.ConfigureServices (static (_, serviceCollection) => {
-					serviceCollection.AddCommonServices ();
-					serviceCollection.AddViews ();
-					serviceCollection.AddViewModels ();
-					serviceCollection.AddJsonConfig (new JsonConfigLocalStorageSource ("Config"));
-				});
+			.AfterSetup (static _ => {
+				var services = new ServiceCollection ();
+				services.AddHost ();
+				services.AddPresentation ();
+				services.AddKeyedSingleton<IJsonConfigSource> (
+					ConfigIds.Presentation, static (_, _) => new JsonConfigLocalStorageSource ("PresentationConfig")
+				);
+				PresentationApi.Services = services.BuildServiceProvider ();
 			});
 	}
 

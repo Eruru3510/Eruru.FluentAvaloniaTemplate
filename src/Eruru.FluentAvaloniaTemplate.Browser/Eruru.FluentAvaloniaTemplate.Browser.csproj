@@ -4,6 +4,7 @@
 		<OutputType>Exe</OutputType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Nullable>enable</Nullable>
+		<OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,4 +15,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Eruru.FluentAvaloniaTemplate\Eruru.FluentAvaloniaTemplate.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<StaticWebAssetFingerprintPattern Include="JS" Pattern="*.js" Expression="#[.{fingerprint}]!" />
+	</ItemGroup>
+
 </Project>

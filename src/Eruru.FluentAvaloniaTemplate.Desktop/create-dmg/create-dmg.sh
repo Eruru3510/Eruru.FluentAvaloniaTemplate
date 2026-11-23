@@ -2,12 +2,13 @@
 #!/bin/bash
 set -e
 
+BASE_NAME="FluentAvaloniaTemplate"
 WORK_DIR="$(pwd)"
 SOURCE_APP="$WORK_DIR/App"
 RELEASE_DIR="$WORK_DIR/../bin/Release"
-TARGET_APP="$RELEASE_DIR/macOS/FluentAvaloniaTemplate.app"
+TARGET_APP="$RELEASE_DIR/macOS/$BASE_NAME.app"
 PUBLISH_DIR="$TARGET_APP/Contents/MacOS"
-DMG_PATH="$HOME/Desktop/FluentAvaloniaTemplate.dmg"
+DMG_PATH="$HOME/Desktop/$BASE_NAME.dmg"
 
 echo "Working directory: $WORK_DIR"
 
@@ -45,10 +46,11 @@ ditto "$PUBLISH_SOURCE" "$PUBLISH_DIR"
 
 echo "Creating DMG..."
 create-dmg \
-    --window-pos 200 120 \
-    --window-size 600 400 \
-    --icon-size 100 \
-    --app-drop-link 450 190 \
+	--icon-size 160 \
+	--window-size 660 400 \
+	--app-drop-link 480 170 \
+	--icon $BASE_NAME.app 180 170 \
+	--overwrite \
     "$DMG_PATH" \
     "$RELEASE_DIR/macOS"
 

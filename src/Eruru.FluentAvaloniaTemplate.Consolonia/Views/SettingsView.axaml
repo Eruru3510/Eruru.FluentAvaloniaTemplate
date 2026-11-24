@@ -42,7 +42,7 @@
 						SelectedValueBinding="{Binding Value}">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
-								<TextBlock Text="{I18N {Binding Key}}" />
+								<TextBlock Text="{Binding Key}" />
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
 					</ComboBox>
@@ -63,7 +63,7 @@
 						SelectedValueBinding="{Binding Value}">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
-								<TextBlock Text="{I18N {Binding Key}}" />
+								<TextBlock Text="{Binding Key}" />
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
 					</ComboBox>

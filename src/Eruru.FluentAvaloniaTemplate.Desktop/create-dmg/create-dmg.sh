@@ -9,6 +9,7 @@ RELEASE_DIR="$WORK_DIR/../bin/Release"
 TARGET_APP="$RELEASE_DIR/macOS/$BASE_NAME.app"
 PUBLISH_DIR="$TARGET_APP/Contents/MacOS"
 DMG_PATH="$HOME/Desktop/$BASE_NAME.dmg"
+DMG_PATH="$RELEASE_DIR/create-dmg/$BASE_NAME.dmg"
 
 echo "Working directory: $WORK_DIR"
 

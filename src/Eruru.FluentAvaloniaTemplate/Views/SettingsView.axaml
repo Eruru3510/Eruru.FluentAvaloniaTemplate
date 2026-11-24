@@ -27,7 +27,7 @@
 				IconSource="Character">
 				<ui:FASettingsExpander.Footer>
 					<ComboBox
-						DisplayMemberBinding="{I18N {Binding Key}}"
+						DisplayMemberBinding="{Binding Key}"
 						ItemsSource="{Binding AppLanguages}"
 						SelectedValue="{Binding AppLanguage}"
 						SelectedValueBinding="{Binding Value}" />
@@ -39,7 +39,7 @@
 				IconSource="Font">
 				<ui:FASettingsExpander.Footer>
 					<ComboBox
-						DisplayMemberBinding="{I18N {Binding Key}}"
+						DisplayMemberBinding="{Binding Key}"
 						ItemsSource="{Binding AppFonts}"
 						SelectedValue="{Binding AppFont}"
 						SelectedValueBinding="{Binding Value}">

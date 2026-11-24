@@ -140,7 +140,9 @@ public partial class MainWindow : FAAppWindow {
 			static (value, state) => value.WindowSize = new (state.Width, state.Height),
 			WindowSize, cancellationToken
 		).ConfigureAwait (true);
-		((IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!).Shutdown ();
+		if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
+			desktop.Shutdown ();
+		}
 	}
 
 	void OnSizeChanged () {

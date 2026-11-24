@@ -21,7 +21,7 @@ public partial class SettingsViewModel : ObservableObject {
 
 	[ObservableProperty]
 	public partial ObservableCollection<KeyValueViewModel> AppLanguages { get; set; } = [
-		new (LangKeys.Default, string.Empty),
+		new (I18NExtension.Translate (LangKeys.Default)!, string.Empty),
 		.. PresentationApi.AppLanguages.Select (static x => new KeyValueViewModel (x.Key, x.Value))
 	];
 	public string? AppLanguage {
@@ -47,6 +47,8 @@ public partial class SettingsViewModel : ObservableObject {
 			CultureInfo.DefaultThreadCurrentCulture = language;
 			CultureInfo.DefaultThreadCurrentUICulture = language;
 			I18NExtension.Culture = language;
+			AppLanguages[0].Key = I18NExtension.Translate (LangKeys.Default)!;
+			AppFonts[0].Key = I18NExtension.Translate (LangKeys.Default)!;
 		}
 
 	}
@@ -63,7 +65,7 @@ public partial class SettingsViewModel : ObservableObject {
 				};
 			})
 			.Select (static x => new KeyValueViewModel (x.Name, x.Name))
-			.Prepend (new (LangKeys.Default, string.Empty))
+			.Prepend (new (I18NExtension.Translate (LangKeys.Default)!, string.Empty))
 	];
 	public string? AppFont {
 
